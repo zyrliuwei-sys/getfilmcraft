@@ -121,6 +121,9 @@ export default {
     // Stream compressed HTML on the Node host as well as at the edge. Static
     // JS/CSS have precompressed variants supplied by Nitro.
     if (
+      // Workers automatically encodes responses with Content-Encoding;
+      // pre-encoding here would send double-gzipped HTML to browsers.
+      !((globalThis as any).__CF_ENV__ || (globalThis as any).__env__) &&
       req.method !== 'HEAD' &&
       response.body &&
       response.headers.get('Content-Type')?.includes('text/html') &&
