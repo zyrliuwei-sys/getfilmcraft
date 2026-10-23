@@ -33,7 +33,7 @@ function ensureCloudflareEnv(): Promise<void> {
 // that points at the previous build's assets. Query strings (utm_*, …) and
 // other paths always render fresh; admin settings show up within 5 minutes.
 declare const __BUILD_ID__: string;
-const HTML_CACHE_PATHS = new Set(['/', '/zh', '/zh/']);
+const HTML_CACHE_PATHS = new Set(['/']);
 const HTML_CACHE_SECONDS = 300;
 
 function htmlEdgeCache(req: Request): Cache | undefined {
@@ -75,6 +75,16 @@ export default {
   async fetch(req: Request): Promise<Response> {
     if (isCrossOriginMutation(req)) {
       return respErr('Forbidden', { status: 403 });
+    }
+    // The Chinese version was retired: send old /zh URLs (already in search
+    // engines' queues) permanently to the matching English page.
+    const requestUrl = new URL(req.url);
+    if (/^\/zh(\/|$)/.test(requestUrl.pathname)) {
+      const target = requestUrl.pathname.replace(/^\/zh/, '') || '/';
+      return Response.redirect(
+        `${requestUrl.origin}${target}${requestUrl.search}`,
+        301
+      );
     }
     await ensureCloudflareEnv();
     const response = await renderWithEdgeCache(req);

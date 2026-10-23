@@ -40,7 +40,7 @@ function Hero() {
         <p className="text-primary text-sm font-medium">
           {m['fc.home.hero.eyebrow']()}
         </p>
-        <h1 className="font-title mt-5 max-w-5xl text-[2.4rem] leading-[1.04] text-balance sm:text-6xl lg:text-[4.4rem]">
+        <h1 className="font-title mt-5 max-w-6xl text-[2.2rem] leading-[1.06] text-balance sm:text-5xl lg:text-[3.5rem]">
           {m['fc.home.hero.title']()}
         </h1>
         <div className="mt-7 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -546,6 +546,8 @@ export function FinalCta() {
           sizes="(min-width: 1024px) 800px, calc(100vw - 32px)"
           alt=""
           aria-hidden
+          width={1600}
+          height={1000}
           loading="lazy"
           fetchPriority="low"
           className="absolute inset-0 -z-10 size-full object-cover opacity-30"

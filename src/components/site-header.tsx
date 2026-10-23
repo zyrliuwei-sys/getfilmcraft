@@ -30,11 +30,14 @@ export function SiteHeader({
   navLinks,
   logoAlt,
   cta,
+  signIn,
 }: {
   navLinks?: NavLink[];
   logoAlt: string;
   /** Signed-out call to action; defaults to "Get started" → /settings. */
   cta?: { href: string; label: string };
+  /** Optional signed-out "Sign in" link shown next to the call to action. */
+  signIn?: { href: string; label: string };
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { data: session } = useSession();
@@ -98,13 +101,26 @@ export function SiteHeader({
               />
             </Suspense>
           ) : (
-            <Link
-              href={cta?.href ?? '/settings'}
-              className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
-            >
-              {cta?.label ?? m['common.nav.get_started']()}
-              <ArrowRight className="size-4" />
-            </Link>
+            <>
+              {signIn && (
+                <Link
+                  href={signIn.href}
+                  className={cn(
+                    buttonVariants({ variant: 'ghost' }),
+                    'rounded-full px-4'
+                  )}
+                >
+                  {signIn.label}
+                </Link>
+              )}
+              <Link
+                href={cta?.href ?? '/settings'}
+                className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
+              >
+                {cta?.label ?? m['common.nav.get_started']()}
+                <ArrowRight className="size-4" />
+              </Link>
+            </>
           )}
         </div>
 
@@ -163,13 +179,27 @@ export function SiteHeader({
                 />
               </Suspense>
             ) : (
-              <Link
-                href={cta?.href ?? '/settings'}
-                className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
-                onClick={() => setMobileOpen(false)}
-              >
-                {cta?.label ?? m['common.nav.get_started']()}
-              </Link>
+              <>
+                {signIn && (
+                  <Link
+                    href={signIn.href}
+                    className={cn(
+                      buttonVariants({ variant: 'ghost' }),
+                      'rounded-full px-4'
+                    )}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {signIn.label}
+                  </Link>
+                )}
+                <Link
+                  href={cta?.href ?? '/settings'}
+                  className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {cta?.label ?? m['common.nav.get_started']()}
+                </Link>
+              </>
             )}
           </div>
         </div>

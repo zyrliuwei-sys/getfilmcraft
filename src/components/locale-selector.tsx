@@ -12,6 +12,8 @@ export function LocaleSelector({
   variant?: 'icon' | 'pill';
   className?: string;
 }) {
+  // Nothing to switch between on a single-language site.
+  if (locales.length < 2) return null;
   const locale = getLocale();
   return (
     <label
