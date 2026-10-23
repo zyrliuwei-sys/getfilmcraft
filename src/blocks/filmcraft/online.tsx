@@ -2,9 +2,9 @@ import { Download, ExternalLink, Maximize2, MonitorPlay } from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
 import {
-  FILMCRAFT_VERSION,
   filmcraftLinks,
   filmcraftWebAppUrl,
+  releaseLinks,
 } from '@/config/filmcraft';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
@@ -60,7 +60,7 @@ function HostedEditor({ url }: { url: string }) {
   );
 }
 
-function PendingEditor() {
+function PendingEditor({ webBuild }: { webBuild: string }) {
   return (
     <Reveal className="bg-card rounded-lg p-7 sm:p-10">
       <MonitorPlay className="size-7" strokeWidth={1.5} />
@@ -71,11 +71,7 @@ function PendingEditor() {
         {m['fc.online.pending.desc']()}
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a
-          href={filmcraftLinks.webBuild}
-          rel="nofollow noopener"
-          className={pillPrimary}
-        >
+        <a href={webBuild} rel="nofollow noopener" className={pillPrimary}>
           <Download className="size-4" />
           {m['fc.online.pending.web']()}
         </a>
@@ -87,7 +83,8 @@ function PendingEditor() {
   );
 }
 
-export function OnlineGuide() {
+export function OnlineGuide({ version }: { version: string }) {
+  const webBuild = releaseLinks(version).webBuild;
   const url = filmcraftWebAppUrl;
   const reqs = [
     m['fc.online.req.r1'](),
@@ -96,7 +93,7 @@ export function OnlineGuide() {
     m['fc.online.req.r4'](),
   ];
   const steps = [
-    m['fc.online.selfhost.s1'](),
+    m['fc.online.selfhost.s1']({ version }),
     m['fc.online.selfhost.s2'](),
     m['fc.online.selfhost.s3'](),
   ];
@@ -110,7 +107,11 @@ export function OnlineGuide() {
       />
       <section className="px-4 pb-16">
         <div className="mx-auto max-w-6xl space-y-6">
-          {url ? <HostedEditor url={url} /> : <PendingEditor />}
+          {url ? (
+            <HostedEditor url={url} />
+          ) : (
+            <PendingEditor webBuild={webBuild} />
+          )}
 
           <div className="grid gap-6 lg:grid-cols-2">
             <Reveal className="bg-card min-w-0 rounded-lg p-7 sm:p-8">
@@ -120,14 +121,13 @@ export function OnlineGuide() {
               <div className="mt-6">
                 <StepList steps={steps} />
               </div>
-              <CodeBlock>{`cd filmcraft-web-${FILMCRAFT_VERSION}\npython3 -m http.server 8765`}</CodeBlock>
+              <CodeBlock>{`cd filmcraft-web-${version}\npython3 -m http.server 8765`}</CodeBlock>
               <a
-                href={filmcraftLinks.webBuild}
+                href={webBuild}
                 rel="nofollow noopener"
                 className="text-muted-foreground hover:text-foreground mt-4 inline-flex items-center gap-1.5 text-sm"
               >
-                filmcraft-web-{FILMCRAFT_VERSION}.zip{' '}
-                <Download className="size-3.5" />
+                filmcraft-web-{version}.zip <Download className="size-3.5" />
               </a>
             </Reveal>
             <Reveal

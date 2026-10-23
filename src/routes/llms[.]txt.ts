@@ -6,7 +6,7 @@ import { m } from '@/paraglide/messages.js';
 const STATIC_PAGES: { path: string; title: string; description: string }[] = [
   {
     path: '',
-    title: 'Filmcraft video editing guides',
+    title: 'GetFilmCraft video editing guides',
     description:
       'FilmCraft downloads, beginner tutorials, online editing options and comparisons',
   },

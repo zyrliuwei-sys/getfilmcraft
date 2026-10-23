@@ -102,8 +102,18 @@ All admin pages include:
 ## Cloudflare deployment
 
 The `getfilmcraft` Worker builds and deploys automatically when `main` is
-pushed. Cloudflare Workers Builds runs `pnpm cf:ci:build`, then
-`pnpm exec wrangler deploy`.
+pushed to `zyrliuwei-sys/getfilmcraft`. Cloudflare Workers Builds runs
+`pnpm cf:ci:build`, then `pnpm exec wrangler deploy` from the repository root.
+The production site is https://getfilmcraft.org and uses the `getfilmcraft` D1 database.
+
+Builds use Node 24.14.1 and pnpm 11.15.1. Runtime secrets (`AUTH_SECRET` and
+`CONFIG_ENCRYPTION_KEY`) belong in Worker Settings → Variables and Secrets;
+they are preserved across code deployments and must never be committed.
+
+To publish later changes, commit and push to `main`; Cloudflare picks up the
+push and deploys that commit. Local edits are not deployed until pushed.
+New database migrations require a separate review and apply step; code builds
+do not run destructive schema synchronization.
 
 [`wrangler.production.json`](./wrangler.production.json) is the tracked source
 for the Worker name, D1 binding, domain, and public app settings. The CI build

@@ -10,7 +10,6 @@ import {
   type ErrorComponentProps,
 } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
-import archivoLatinUrl from '@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2?url';
 import interTightLatinUrl from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
 import { ThemeProvider } from 'next-themes';
 
@@ -74,7 +73,7 @@ export const Route = createRootRoute({
           rel: 'preload',
           as: 'font',
           type: 'font/woff2',
-          href: archivoLatinUrl,
+          href: '/fonts/archivo-display-latin.woff2',
           crossOrigin: 'anonymous',
         },
         {

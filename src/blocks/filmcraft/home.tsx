@@ -1,8 +1,13 @@
-import { ArrowRight, ArrowUpRight, Download, Globe } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  ChevronDown,
+  Download,
+  Globe,
+} from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
 import {
-  FILMCRAFT_VERSION,
   filmcraftImages,
   filmcraftImageSrcSet,
   filmcraftLinks,
@@ -12,12 +17,6 @@ import { m } from '@/paraglide/messages.js';
 import { CompareTable } from '@/components/filmcraft/compare-table';
 import { Reveal } from '@/components/filmcraft/reveal';
 import { SectionHeading } from '@/components/filmcraft/section-heading';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { buttonVariants } from '@/components/ui/button';
 
 import { compareColumns, compareRows } from './compare-rows';
@@ -62,7 +61,7 @@ function Hero() {
       </div>
 
       <figure className="mx-auto mt-12 max-w-7xl sm:mt-16">
-        <div className="rounded-[10px] bg-black/50">
+        <div className="rounded-[10px]">
           <img
             src={filmcraftImages.hero}
             srcSet={filmcraftImageSrcSet(filmcraftImages.hero)}
@@ -82,11 +81,11 @@ function Hero() {
   );
 }
 
-function WhatIs() {
+function WhatIs({ version }: { version: string }) {
   const specs = [
     [m['fc.home.spec.developer'](), 'ArtCraft'],
     [m['fc.home.spec.license'](), 'MIT / Apache-2.0'],
-    [m['fc.home.spec.version'](), FILMCRAFT_VERSION],
+    [m['fc.home.spec.version'](), version],
     [m['fc.home.spec.platforms'](), m['fc.home.spec.platforms_value']()],
     [m['fc.home.spec.language'](), 'Rust'],
     [m['fc.home.spec.price'](), m['fc.home.spec.free']()],
@@ -501,22 +500,22 @@ function Faq() {
           <SectionHeading title={m['fc.home.faq.title']()} />
         </Reveal>
         <Reveal delay={100}>
-          <Accordion className="border-border border-t">
+          <div className="border-border border-t">
             {faqs.map(([q, a]) => (
-              <AccordionItem
-                key={q}
-                value={q}
-                className="border-border border-b"
-              >
-                <AccordionTrigger className="py-5 text-left text-[17px] font-medium hover:no-underline">
+              <details key={q} className="group border-border border-b">
+                <summary className="focus-visible:outline-ring flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-5 text-left text-[17px] font-medium focus-visible:outline-2 [&::-webkit-details-marker]:hidden">
                   {q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-5 text-base leading-relaxed">
+                  <ChevronDown
+                    aria-hidden
+                    className="size-4 shrink-0 transition-transform group-open:rotate-180"
+                  />
+                </summary>
+                <p className="text-muted-foreground pb-5 text-base leading-relaxed">
                   {a}
-                </AccordionContent>
-              </AccordionItem>
+                </p>
+              </details>
             ))}
-          </Accordion>
+          </div>
         </Reveal>
       </div>
       <script
@@ -580,11 +579,11 @@ export function FinalCta() {
   );
 }
 
-export function FilmCraftHome() {
+export function FilmCraftHome({ version }: { version: string }) {
   return (
     <>
       <Hero />
-      <WhatIs />
+      <WhatIs version={version} />
       <Features />
       <Review />
       <ArtCraft />

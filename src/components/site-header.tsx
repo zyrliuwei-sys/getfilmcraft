@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { ArrowRight, Menu, X } from 'lucide-react';
 
 import { useSession } from '@/core/auth/client';
@@ -7,9 +7,14 @@ import { envConfigs } from '@/config';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 import { LocaleSelector } from '@/components/locale-selector';
-import { SiteUserMenu } from '@/components/site-user-menu';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { buttonVariants } from '@/components/ui/button';
+
+const SiteUserMenu = lazy(() =>
+  import('@/components/site-user-menu').then((module) => ({
+    default: module.SiteUserMenu,
+  }))
+);
 
 export interface NavLink {
   href: string;
@@ -83,11 +88,15 @@ export function SiteHeader({
           <LocaleSelector />
           <ThemeToggle />
           {user ? (
-            <SiteUserMenu
-              name={user.name || 'User'}
-              email={user.email}
-              image={user.image}
-            />
+            <Suspense
+              fallback={<span className="bg-muted size-10 rounded-full" />}
+            >
+              <SiteUserMenu
+                name={user.name || 'User'}
+                email={user.email}
+                image={user.image}
+              />
+            </Suspense>
           ) : (
             <Link
               href={cta?.href ?? '/settings'}
@@ -144,11 +153,15 @@ export function SiteHeader({
             <ThemeToggle />
             <div className="flex-1" />
             {user ? (
-              <SiteUserMenu
-                name={user.name || 'User'}
-                email={user.email}
-                image={user.image}
-              />
+              <Suspense
+                fallback={<span className="bg-muted size-10 rounded-full" />}
+              >
+                <SiteUserMenu
+                  name={user.name || 'User'}
+                  email={user.email}
+                  image={user.image}
+                />
+              </Suspense>
             ) : (
               <Link
                 href={cta?.href ?? '/settings'}

@@ -82,6 +82,9 @@ export async function grant(params: {
   scene?: string;
   expiresAt?: Date | null;
 }) {
+  if (!Number.isSafeInteger(params.credits) || params.credits <= 0) {
+    throw new Error('Credits must be a positive safe integer');
+  }
   const newCredit: NewCredit = {
     id: getUuid(),
     userId: params.userId,
@@ -123,6 +126,10 @@ export async function consume(params: {
     tx,
   } = params;
   const now = new Date();
+
+  if (!Number.isSafeInteger(amount) || amount <= 0) {
+    throw new Error('Credits must be a positive safe integer');
+  }
 
   const execute = async (tx: any) => {
     // 1. Check balance
@@ -192,6 +199,10 @@ export async function consume(params: {
       batchNo++;
     }
 
+    if (remainingToConsume > 0) {
+      throw new Error('Unable to consume the full credit amount');
+    }
+
     // 3. Create consumption record
     const consumedCredit: NewCredit = {
       id: getUuid(),
@@ -219,23 +230,37 @@ export async function consume(params: {
 // --- Revoke (restore credits from a consumed record) ---
 
 export async function revoke(consumeCreditId: string) {
-  const [consumeRecord] = await db()
-    .select()
-    .from(credit)
-    .where(
-      and(
-        eq(credit.id, consumeCreditId),
-        eq(credit.transactionType, CreditTransactionType.CONSUME),
-        eq(credit.status, CreditStatus.ACTIVE)
+  return db().transaction(async (tx: any) => {
+    const [consumeRecord] = await tx
+      .select()
+      .from(credit)
+      .where(
+        and(
+          eq(credit.id, consumeCreditId),
+          eq(credit.transactionType, CreditTransactionType.CONSUME),
+          eq(credit.status, CreditStatus.ACTIVE)
+        )
       )
-    )
-    .limit(1);
+      .limit(1)
+      .for('update');
 
-  if (!consumeRecord || !consumeRecord.consumedDetail) return;
+    if (!consumeRecord || !consumeRecord.consumedDetail) return;
 
-  const items = JSON.parse(consumeRecord.consumedDetail);
+    const items = JSON.parse(consumeRecord.consumedDetail);
 
-  await db().transaction(async (tx: any) => {
+    // Claim the refund before changing balances. Repeated failures/callbacks
+    // must not refund the same consumption record twice.
+    const [claimed] = await tx
+      .update(credit)
+      .set({ status: CreditStatus.DELETED })
+      .where(
+        and(
+          eq(credit.id, consumeCreditId),
+          eq(credit.status, CreditStatus.ACTIVE)
+        )
+      )
+      .returning();
+    if (!claimed) return;
     // Atomic increment per source grant — no read-modify-write race.
     for (const item of items) {
       await tx
@@ -245,12 +270,6 @@ export async function revoke(consumeCreditId: string) {
         })
         .where(eq(credit.id, item.creditId));
     }
-
-    // Mark consumption record as deleted
-    await tx
-      .update(credit)
-      .set({ status: CreditStatus.DELETED })
-      .where(eq(credit.id, consumeCreditId));
   });
 }
 

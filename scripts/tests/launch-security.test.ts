@@ -94,6 +94,43 @@ await test('disabled and expired roles do not retain permissions', async () => {
   client.close();
 });
 
+await test('credit refunds are idempotent and amounts are validated', async () => {
+  const client = createClient({ url: process.env.DATABASE_URL! });
+  await client.executeMultiple(`
+    CREATE TABLE credit (
+      id TEXT PRIMARY KEY, user_id TEXT, user_email TEXT, order_no TEXT,
+      subscription_no TEXT, transaction_no TEXT, transaction_type TEXT,
+      transaction_scene TEXT, credits INTEGER, remaining_credits INTEGER,
+      description TEXT, expires_at INTEGER, status TEXT, created_at INTEGER,
+      updated_at INTEGER, deleted_at INTEGER, consumed_detail TEXT, metadata TEXT
+    );
+    INSERT INTO credit (id,user_id,transaction_no,transaction_type,credits,remaining_credits,status)
+      VALUES ('grant','test-user','grant-tx','grant',100,60,'active');
+  `);
+  await client.execute({
+    sql: `INSERT INTO credit (id,user_id,transaction_no,transaction_type,credits,remaining_credits,status,consumed_detail)
+    VALUES ('consume','test-user','consume-tx','consume',-40,0,'active',?)`,
+    args: [JSON.stringify([{ creditId: 'grant', creditsConsumed: 40 }])],
+  });
+  const { revoke, grant, consume } =
+    await import('../../src/modules/credits/service');
+  await revoke('consume');
+  await revoke('consume');
+  const balance = await client.execute(
+    "SELECT remaining_credits FROM credit WHERE id='grant'"
+  );
+  assert.equal(balance.rows[0].remaining_credits, 100);
+  await assert.rejects(
+    grant({ userId: 'test-user', credits: -1 }),
+    /positive safe integer/
+  );
+  await assert.rejects(
+    consume({ userId: 'test-user', credits: 0.5 }),
+    /positive safe integer/
+  );
+  client.close();
+});
+
 await test('D1 HTTP batches preserve parameter binding in one request', async () => {
   process.env.CLOUDFLARE_ACCOUNT_ID = 'test-account';
   process.env.D1_DATABASE_ID = 'test-database';

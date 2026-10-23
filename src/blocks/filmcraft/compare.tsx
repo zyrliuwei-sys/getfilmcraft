@@ -24,7 +24,7 @@ function CheckList({ items }: { items: string[] }) {
   );
 }
 
-export function CompareGuide() {
+export function CompareGuide({ version }: { version: string }) {
   const fcWins = [
     m['fc.vs.fc_wins.1'](),
     m['fc.vs.fc_wins.2'](),
@@ -79,7 +79,7 @@ export function CompareGuide() {
               rows={compareRows()}
             />
             <p className="text-muted-foreground mt-3 text-xs">
-              {m['fc.vs.table.note']()}
+              {m['fc.vs.table.note']({ version })}
             </p>
           </Reveal>
 

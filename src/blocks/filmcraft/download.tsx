@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Download, ExternalLink, Rocket } from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
 import {
-  downloads,
-  FILMCRAFT_VERSION,
+  buildDownloads,
   filmcraftLinks,
+  releaseLinks,
+  type DownloadArch,
+  type DownloadKind,
+  type FilmcraftRelease,
   type PlatformId,
 } from '@/config/filmcraft';
 import { cn } from '@/lib/utils';
@@ -15,16 +18,17 @@ import { Reveal } from '@/components/filmcraft/reveal';
 import { pillGhost, pillPrimary } from './home';
 import { CodeBlock, PageIntro, StepList } from './page-shell';
 
-const LINUX_CMDS = `chmod +x filmcraft-${FILMCRAFT_VERSION}-linux-x86_64.AppImage
-./filmcraft-${FILMCRAFT_VERSION}-linux-x86_64.AppImage
+const linuxCmds = (v: string) => `chmod +x filmcraft-${v}-linux-x86_64.AppImage
+./filmcraft-${v}-linux-x86_64.AppImage
 
-flatpak install --user filmcraft-${FILMCRAFT_VERSION}-linux-x86_64.flatpak
+flatpak install --user filmcraft-${v}-linux-x86_64.flatpak
 
-sudo apt install ./filmcraft-${FILMCRAFT_VERSION}-linux-x86_64.deb   # Debian / Ubuntu
-sudo dnf install ./filmcraft-${FILMCRAFT_VERSION}-linux-x86_64.rpm   # Fedora`;
+sudo apt install ./filmcraft-${v}-linux-x86_64.deb   # Debian / Ubuntu
+sudo dnf install ./filmcraft-${v}-linux-x86_64.rpm   # Fedora
+sudo pacman -U filmcraft-${v}-linux-x86_64.pkg.tar.zst   # Arch`;
 
-const WEB_CMDS = `unzip filmcraft-web-${FILMCRAFT_VERSION}.zip
-cd filmcraft-web-${FILMCRAFT_VERSION}
+const webCmds = (v: string) => `unzip filmcraft-web-${v}.zip
+cd filmcraft-web-${v}
 python3 -m http.server 8765`;
 
 const SOURCE_CMDS = `git clone https://github.com/storytold/filmcraft.git
@@ -34,6 +38,38 @@ cargo run --release -p filmcraft`;
 const VERIFY_CMDS = `shasum -a 256 <file>             # macOS / Linux
 certutil -hashfile <file> SHA256  # Windows`;
 
+function kindLabel(kind: DownloadKind): string {
+  const labels: Record<DownloadKind, () => string> = {
+    dmg: m['fc.dl.kind.dmg'],
+    cli: m['fc.dl.kind.cli'],
+    msi: m['fc.dl.kind.msi'],
+    portable: m['fc.dl.kind.portable'],
+    appimage: () => 'AppImage',
+    flatpak: () => 'Flatpak',
+    deb: () => '.deb',
+    rpm: () => '.rpm',
+    arch: m['fc.dl.kind.arch'],
+    tarball: () => 'tar.gz',
+    web: m['fc.dl.kind.web'],
+    freebsd: m['fc.dl.kind.freebsd'],
+  };
+  return labels[kind]();
+}
+
+function archLabel(arch: DownloadArch): string {
+  const labels: Record<DownloadArch, () => string> = {
+    universal: m['fc.dl.arch.universal'],
+    universal_cli: m['fc.dl.arch.universal_cli'],
+    x64: () => 'x64',
+    arm64: () => 'ARM64',
+    x86: m['fc.dl.arch.x86'],
+    x86_64: () => 'x86_64',
+    riscv64: () => 'RISC-V (riscv64)',
+    browser: m['fc.dl.arch.browser'],
+  };
+  return labels[arch]();
+}
+
 function detectPlatform(): PlatformId {
   const ua = navigator.userAgent.toLowerCase();
   if (ua.includes('mac')) return 'macos';
@@ -42,7 +78,9 @@ function detectPlatform(): PlatformId {
   return 'other';
 }
 
-export function DownloadGuide() {
+export function DownloadGuide({ release }: { release: FilmcraftRelease }) {
+  const links = releaseLinks(release.version);
+  const allDownloads = useMemo(() => buildDownloads(release), [release]);
   const [platform, setPlatform] = useState<PlatformId>('macos');
   useEffect(() => setPlatform(detectPlatform()), []);
 
@@ -82,7 +120,7 @@ export function DownloadGuide() {
         m['fc.dl.linux.s2'](),
         m['fc.dl.linux.s3'](),
       ],
-      code: LINUX_CMDS,
+      code: linuxCmds(release.version),
     },
     other: {
       req: m['fc.dl.other.req'](),
@@ -91,16 +129,16 @@ export function DownloadGuide() {
         m['fc.dl.other.s2'](),
         m['fc.dl.other.s3'](),
       ],
-      code: WEB_CMDS,
+      code: webCmds(release.version),
     },
   };
   const current = info[platform];
-  const files = downloads[platform];
+  const files = allDownloads[platform];
 
   return (
     <>
       <PageIntro
-        label={`${m['fc.dl.label']()} · ${m['fc.common.version']()} v${FILMCRAFT_VERSION}`}
+        label={`${m['fc.dl.label']()} · ${m['fc.common.version']()} v${release.version}`}
         title={m['fc.dl.title']()}
         description={m['fc.dl.subtitle']()}
       />
@@ -165,41 +203,53 @@ export function DownloadGuide() {
                 <h3 className="mt-6 mb-3 text-sm font-medium">
                   {m['fc.dl.files']()}
                 </h3>
-                <ul className="divide-border border-border divide-y rounded-lg border">
-                  {files.map((file) => (
-                    <li
-                      key={file.href}
-                      className="flex items-center justify-between gap-4 px-4 py-3.5"
-                    >
-                      <div className="min-w-0">
-                        <p className="flex flex-wrap items-center gap-2 font-medium">
-                          {file.label}
-                          {file.recommended && (
-                            <span className="bg-primary/15 text-primary rounded-full px-2 py-0.5 text-[11px] font-medium">
-                              {m['fc.dl.recommended']()}
-                            </span>
-                          )}
-                        </p>
-                        <p className="text-muted-foreground text-sm">
-                          {file.arch}
-                        </p>
-                      </div>
-                      <a
-                        href={file.href}
-                        rel="nofollow noopener"
-                        className={cn(
-                          'inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors',
-                          file.recommended
-                            ? 'bg-primary text-primary-foreground hover:bg-primary/85'
-                            : 'border-border hover:bg-accent border'
-                        )}
+                {files.length === 0 ? (
+                  <a
+                    href={filmcraftLinks.releases}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary inline-flex items-center gap-1.5 text-sm hover:underline"
+                  >
+                    {m['fc.footer.releases']()}{' '}
+                    <ExternalLink className="size-3.5" />
+                  </a>
+                ) : (
+                  <ul className="divide-border border-border divide-y rounded-lg border">
+                    {files.map((file) => (
+                      <li
+                        key={file.href}
+                        className="flex items-center justify-between gap-4 px-4 py-3.5"
                       >
-                        <Download className="size-4" />
-                        {m['fc.dl.download']()}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                        <div className="min-w-0">
+                          <p className="flex flex-wrap items-center gap-2 font-medium">
+                            {kindLabel(file.kind)}
+                            {file.recommended && (
+                              <span className="bg-primary/15 text-primary rounded-full px-2 py-0.5 text-[11px] font-medium">
+                                {m['fc.dl.recommended']()}
+                              </span>
+                            )}
+                          </p>
+                          <p className="text-muted-foreground text-sm">
+                            {archLabel(file.arch)}
+                          </p>
+                        </div>
+                        <a
+                          href={file.href}
+                          rel="nofollow noopener"
+                          className={cn(
+                            'inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                            file.recommended
+                              ? 'bg-primary text-primary-foreground hover:bg-primary/85'
+                              : 'border-border hover:bg-accent border'
+                          )}
+                        >
+                          <Download className="size-4" />
+                          {m['fc.dl.download']()}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               <div className="min-w-0">
                 <h3 className="mb-4 text-sm font-medium">
@@ -222,7 +272,7 @@ export function DownloadGuide() {
               </p>
               <CodeBlock>{VERIFY_CMDS}</CodeBlock>
               <a
-                href={filmcraftLinks.checksums}
+                href={links.checksums}
                 rel="nofollow noopener"
                 className="text-muted-foreground hover:text-foreground mt-4 inline-flex items-center gap-1.5 text-sm"
               >
@@ -250,7 +300,7 @@ export function DownloadGuide() {
                 {m['fc.dl.notes.desc']()}
               </p>
               <a
-                href={filmcraftLinks.releaseNotes}
+                href={links.releaseNotes}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground mt-4 inline-flex items-center gap-1.5 text-sm"

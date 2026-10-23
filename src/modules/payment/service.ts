@@ -397,6 +397,15 @@ async function handleCheckoutSuccess(session: any, provider: string) {
 
     // Atomically update order + create subscription + grant credits
     await db().transaction(async (tx: any) => {
+      // Serialize webhook/return-page deliveries for the same order. The
+      // earlier status check alone can race with another pending callback.
+      const [lockedOrder] = await tx
+        .select({ status: order.status })
+        .from(order)
+        .where(eq(order.orderNo, existingOrder.orderNo))
+        .limit(1)
+        .for('update');
+      if (!lockedOrder || lockedOrder.status === OrderStatus.PAID) return;
       // 1. Create subscription if applicable
       if (subscriptionInfo && session.subscriptionId) {
         const subNo = getSnowId();
@@ -526,6 +535,28 @@ export async function handleSubscriptionRenewal(
   const renewalOrderNo = getSnowId();
 
   await db().transaction(async (tx: any) => {
+    // The subscription is the serialization point for concurrent deliveries
+    // of a renewal. Re-check provider transaction id after taking the lock.
+    const [lockedSubscription] = await tx
+      .select({ id: subscription.id })
+      .from(subscription)
+      .where(eq(subscription.subscriptionNo, existingSub.subscriptionNo))
+      .limit(1)
+      .for('update');
+    if (!lockedSubscription) return;
+    if (paymentInfo?.transactionId) {
+      const [duplicate] = await tx
+        .select({ id: order.id })
+        .from(order)
+        .where(
+          and(
+            eq(order.transactionId, paymentInfo.transactionId),
+            eq(order.paymentProvider, provider)
+          )
+        )
+        .limit(1);
+      if (duplicate) return;
+    }
     // 1. Update subscription period
     await tx
       .update(subscription)

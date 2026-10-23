@@ -151,6 +151,9 @@ export default defineConfig({
         '/assets/**': {
           headers: { 'cache-control': 'public, max-age=31536000, immutable' },
         },
+        '/fonts/**': {
+          headers: { 'cache-control': 'public, max-age=86400' },
+        },
         '/imgs/**': {
           headers: { 'cache-control': 'public, max-age=86400' },
         },

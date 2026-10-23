@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
+import { getFilmcraftRelease } from '@/lib/filmcraft-release';
 import { pageHead } from '@/lib/page-head';
 import { m } from '@/paraglide/messages.js';
 import { getLocale } from '@/paraglide/runtime.js';
@@ -7,7 +8,10 @@ import { CompareGuide } from '@/blocks/filmcraft/compare';
 import { PageShell } from '@/blocks/filmcraft/page-shell';
 
 export const Route = createFileRoute('/filmcraft-vs-premiere-pro')({
-  loader: () => ({ locale: getLocale() }),
+  loader: async () => ({
+    locale: getLocale(),
+    release: await getFilmcraftRelease(),
+  }),
   head: ({ loaderData }) => {
     const locale = (loaderData?.locale ?? 'en') as 'en';
     return pageHead({
@@ -21,9 +25,10 @@ export const Route = createFileRoute('/filmcraft-vs-premiere-pro')({
 });
 
 function ComparePage() {
+  const { release } = Route.useLoaderData();
   return (
     <PageShell>
-      <CompareGuide />
+      <CompareGuide version={release.version} />
     </PageShell>
   );
 }

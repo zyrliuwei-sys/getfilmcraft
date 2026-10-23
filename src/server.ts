@@ -118,6 +118,32 @@ export default {
         );
       }
     }
+    // Stream compressed HTML on the Node host as well as at the edge. Static
+    // JS/CSS have precompressed variants supplied by Nitro.
+    if (
+      req.method !== 'HEAD' &&
+      response.body &&
+      response.headers.get('Content-Type')?.includes('text/html') &&
+      !response.headers.has('Content-Encoding') &&
+      /\bgzip\b/.test(req.headers.get('Accept-Encoding') || '')
+    ) {
+      const headers = new Headers(response.headers);
+      headers.set('Content-Encoding', 'gzip');
+      headers.delete('Content-Length');
+      const vary = headers.get('Vary');
+      headers.set(
+        'Vary',
+        vary ? `${vary}, Accept-Encoding` : 'Accept-Encoding'
+      );
+      return new Response(
+        response.body.pipeThrough(new CompressionStream('gzip')),
+        {
+          status: response.status,
+          statusText: response.statusText,
+          headers,
+        }
+      );
+    }
     return response;
   },
 };

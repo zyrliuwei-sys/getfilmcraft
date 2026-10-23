@@ -7,7 +7,7 @@
   },
   "vars": {
     "DATABASE_PROVIDER": "d1",
-    "VITE_APP_URL": "https://getfilmcraft.zyrliuwei.workers.dev",
+    "VITE_APP_URL": "https://getfilmcraft.org",
     "VITE_APP_NAME": "Filmcraft",
     "VITE_APP_DESCRIPTION": "Find FilmCraft download links, English setup guides, browser editing options and beginner tutorials. Compare FilmCraft with Adobe Premiere Pro before you start.",
     "VITE_APP_LOGO": "/logo.svg",
@@ -21,7 +21,10 @@
       "migrations_dir": "drizzle"
     }
   ],
-  "triggers": {
-    "crons": ["* * * * *"]
-  }
+  "routes": [
+    {
+      "pattern": "getfilmcraft.org",
+      "custom_domain": true
+    }
+  ]
 }
