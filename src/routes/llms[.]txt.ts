@@ -6,8 +6,30 @@ import { m } from '@/paraglide/messages.js';
 const STATIC_PAGES: { path: string; title: string; description: string }[] = [
   {
     path: '',
-    title: 'Hotel Lobby AI Filter',
-    description: 'Two-person duet planning and prompt guide',
+    title: 'Filmcraft video editing guides',
+    description:
+      'FilmCraft downloads, beginner tutorials, online editing options and comparisons',
+  },
+  {
+    path: '/download',
+    title: 'FilmCraft download guide',
+    description: 'Official releases and installation instructions',
+  },
+  {
+    path: '/online',
+    title: 'FilmCraft online',
+    description:
+      'Browser access availability and self-hosted web build instructions',
+  },
+  {
+    path: '/tutorial',
+    title: 'FilmCraft beginner tutorial',
+    description: 'Import, trim, arrange, add sound and export a video',
+  },
+  {
+    path: '/filmcraft-vs-premiere-pro',
+    title: 'FilmCraft vs Adobe Premiere Pro',
+    description: 'Compare features, workflow, cost, strengths and limitations',
   },
   {
     path: '/privacy-policy',
@@ -22,7 +44,8 @@ const STATIC_PAGES: { path: string; title: string; description: string }[] = [
   {
     path: '/acceptable-use-policy',
     title: 'Acceptable Use Policy',
-    description: 'Content rules, child safety and how to report violations',
+    description:
+      'Responsible use of the website, downloads and support channels',
   },
 ];
 

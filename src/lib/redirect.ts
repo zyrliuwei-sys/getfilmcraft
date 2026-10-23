@@ -27,6 +27,9 @@ export function safeInternalPath(
   input: string | null | undefined
 ): string | null {
   if (!input) return null;
+  // Browsers normalize backslashes and control characters in URLs. Reject
+  // them before checking the leading slash (e.g. /\\evil.example).
+  if (/[\\\u0000-\u0020\u007f]/.test(input)) return null;
 
   let path = input;
   if (!path.startsWith('/') || path.startsWith('//')) {
@@ -41,7 +44,7 @@ export function safeInternalPath(
     }
   }
 
-  return AUTH_PATH_RE.test(path) ? null : path;
+  return AUTH_PATH_RE.test(deLocalizeHref(path)) ? null : path;
 }
 
 // Schemes that execute or embed rather than hand off to an installed app.
@@ -82,7 +85,7 @@ export function isAllowedAppProtocolUrl(
 }
 
 /** Default landing after sign-in / sign-up: the generator on the homepage. */
-export const AFTER_AUTH_HOME = '/#create';
+export const AFTER_AUTH_HOME = '/';
 
 /**
  * Where to send the user once they are signed in.

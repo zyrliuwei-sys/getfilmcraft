@@ -134,7 +134,13 @@ function withSqliteCompat<T extends object>(
     get(target, prop, receiver) {
       if (prop === 'transaction') {
         if (provider === 'd1') {
-          return (fn: any) => fn(proxied);
+          // D1 only supports atomic prepared batches. Executing an interactive
+          // callback here silently committed partial payments/credit changes.
+          return () => {
+            throw new Error(
+              'Interactive transactions are unavailable on D1. Use an atomic batch before enabling this feature.'
+            );
+          };
         }
         const original = Reflect.get(target, prop, receiver);
         if (typeof original !== 'function') return original;

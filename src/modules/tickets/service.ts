@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm';
 
 import { db } from '@/core/db';
+import { envConfigs } from '@/config';
 import {
   ticket,
   ticketMessage,
@@ -99,6 +100,35 @@ export async function createTicket(params: {
   content: string;
   attachments?: string[];
 }): Promise<Ticket> {
+  if (envConfigs.database_provider === 'd1') {
+    const now = new Date();
+    const id = getUuid();
+    const [rows] = await db().batch([
+      db()
+        .insert(ticket)
+        .values({
+          id,
+          userId: params.userId,
+          title: params.title,
+          status: 'open',
+          createdAt: now,
+          updatedAt: now,
+        })
+        .returning(),
+      db()
+        .insert(ticketMessage)
+        .values({
+          id: getUuid(),
+          ticketId: id,
+          userId: params.userId,
+          role: 'user',
+          content: params.content,
+          attachments: JSON.stringify(params.attachments ?? []),
+          createdAt: now,
+        }),
+    ]);
+    return rows[0];
+  }
   return db().transaction(async (tx: any) => {
     const now = new Date();
     const [row] = await tx
@@ -294,6 +324,31 @@ export async function addMessage(params: {
   content: string;
   attachments?: string[];
 }): Promise<TicketMessage> {
+  if (envConfigs.database_provider === 'd1') {
+    const now = new Date();
+    const [rows] = await db().batch([
+      db()
+        .insert(ticketMessage)
+        .values({
+          id: getUuid(),
+          ticketId: params.ticketId,
+          userId: params.userId,
+          role: params.role,
+          content: params.content,
+          attachments: JSON.stringify(params.attachments ?? []),
+          createdAt: now,
+        })
+        .returning(),
+      db()
+        .update(ticket)
+        .set({
+          status: params.role === 'admin' ? 'replied' : 'open',
+          updatedAt: now,
+        })
+        .where(eq(ticket.id, params.ticketId)),
+    ]);
+    return rows[0];
+  }
   return db().transaction(async (tx: any) => {
     const now = new Date();
     const [row] = await tx

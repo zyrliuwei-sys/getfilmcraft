@@ -1,24 +1,27 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "hotel-lobby-ai",
+  "name": "getfilmcraft",
   "compatibility_flags": ["nodejs_compat"],
-  "observability": { "enabled": true },
+  "observability": {
+    "enabled": true
+  },
   "vars": {
     "DATABASE_PROVIDER": "d1",
-    "VITE_APP_URL": "https://hotel-lobby.org",
-    "VITE_APP_NAME": "Hotel Lobby AI",
-    "VITE_APP_DESCRIPTION": "Plan a two-person Hotel Lobby AI filter video and copy a prompt for an image-to-video studio.",
+    "VITE_APP_URL": "https://getfilmcraft.zyrliuwei.workers.dev",
+    "VITE_APP_NAME": "Filmcraft",
+    "VITE_APP_DESCRIPTION": "Find FilmCraft download links, English setup guides, browser editing options and beginner tutorials. Compare FilmCraft with Adobe Premiere Pro before you start.",
     "VITE_APP_LOGO": "/logo.svg",
     "VITE_DEFAULT_LOCALE": "en"
   },
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "hotel-lobby-db",
-      "database_id": "9c9d279e-2929-4b38-9d0f-0259fb6a96dd",
+      "database_name": "getfilmcraft",
+      "database_id": "da47f6be-4baf-4881-9551-0dba81fa5eb0",
       "migrations_dir": "drizzle"
     }
   ],
-  "triggers": { "crons": ["* * * * *"] },
-  "routes": [{ "pattern": "hotel-lobby.org", "custom_domain": true }]
+  "triggers": {
+    "crons": ["* * * * *"]
+  }
 }

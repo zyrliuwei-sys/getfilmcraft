@@ -1,5 +1,3 @@
-import { md5 } from './hash';
-
 type MinIntervalOptions = {
   intervalMs: number;
   keyPrefix?: string;
@@ -13,6 +11,9 @@ declare global {
 }
 
 function getClientIpFromRequest(request: Request): string {
+  // Cloudflare supplies this at the edge. Never prefer a caller-provided XFF.
+  const cloudflareIp = request.headers.get('cf-connecting-ip');
+  if (cloudflareIp) return cloudflareIp;
   const xff = request.headers.get('x-forwarded-for');
   if (xff) return xff.split(',')[0]?.trim() || '';
   return (
@@ -32,11 +33,10 @@ function getStore(): Store {
 function buildKey(request: Request, opts: MinIntervalOptions): string {
   const url = new URL(request.url);
   const ip = getClientIpFromRequest(request);
-  const cookie = request.headers.get('cookie') || '';
-  const cookieHash = cookie ? md5(cookie) : 'no-cookie';
   const prefix = opts.keyPrefix || 'min-interval';
   const extra = opts.extraKey ? `|${opts.extraKey}` : '';
-  return `${prefix}|${request.method}|${url.pathname}|${ip}|${cookieHash}${extra}`;
+  // Arbitrary cookie changes must not reset an IP's sensitive-request limit.
+  return `${prefix}|${request.method}|${url.pathname}|${ip}${extra}`;
 }
 
 export function enforceMinIntervalRateLimit(
@@ -47,6 +47,12 @@ export function enforceMinIntervalRateLimit(
   if (!intervalMs) return null;
   const now = Date.now();
   const store = getStore();
+  if (store.size >= 5000) {
+    for (const [entryKey, time] of store) {
+      if (now - time > Math.max(intervalMs, 60_000)) store.delete(entryKey);
+    }
+    if (store.size >= 5000) store.delete(store.keys().next().value!);
+  }
   const key = buildKey(request, opts);
   const last = store.get(key);
   if (typeof last === 'number') {

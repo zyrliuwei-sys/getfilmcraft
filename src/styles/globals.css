@@ -4,8 +4,18 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-sans: 'DM Sans Variable', 'PingFang SC', sans-serif;
-  --font-serif-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+  /* Latin system fonts come before PingFang so English text never falls
+     back to CJK punctuation (PingFang's hyphen is full-width); Chinese
+     glyphs still cascade to PingFang / Microsoft YaHei. */
+  --font-sans:
+    'Inter Tight Variable', -apple-system, 'Segoe UI', Roboto, 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  --font-display:
+    'Archivo Variable', -apple-system, 'Segoe UI', Roboto, 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  --font-mono-brand: 'JetBrains Mono Variable', ui-monospace, monospace;
+  /* legacy alias: older blocks use font-serif for display headings */
+  --font-serif-display: var(--font-display);
 }
 
 @theme inline {
@@ -51,47 +61,87 @@
   /* CJK serif glyphs use locally-installed fonts — a Chinese serif webfont
      ships 300+ @font-face subsets (~100KB render-blocking CSS on every page)
      and is not worth it for headings. */
+  --font-display:
+    var(--font-display), -apple-system, 'system-ui', 'Segoe UI', sans-serif;
+  --font-mono:
+    var(--font-mono-brand), ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-serif:
     var(--font-serif-display), ui-serif, Georgia, Cambria, 'Times New Roman',
     'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', Times, serif;
 }
 
 @layer base {
-  :root,
+  /* Warm paper in light mode; projector charcoal in dark mode. */
+  :root {
+    --background: oklch(0.985 0.006 85);
+    --foreground: oklch(0.23 0.015 65);
+    --card: oklch(0.96 0.01 85);
+    --card-foreground: oklch(0.23 0.015 65);
+    --popover: oklch(0.995 0.003 85);
+    --popover-foreground: oklch(0.23 0.015 65);
+    --primary: oklch(0.45 0.1 55);
+    --primary-foreground: oklch(0.99 0.005 85);
+    --secondary: oklch(0.93 0.012 85);
+    --secondary-foreground: oklch(0.26 0.015 65);
+    --muted: oklch(0.93 0.012 85);
+    --muted-foreground: oklch(0.46 0.02 65);
+    --accent: oklch(0.91 0.02 80);
+    --accent-foreground: oklch(0.23 0.015 65);
+    --destructive: oklch(0.5 0.19 28);
+    --destructive-foreground: oklch(0.99 0 0);
+    --border: oklch(0.3 0.02 65 / 0.18);
+    --input: oklch(0.3 0.02 65 / 0.24);
+    --ring: oklch(0.45 0.1 55 / 0.7);
+    --chart-1: oklch(0.45 0.1 55);
+    --chart-2: oklch(0.46 0.02 65);
+    --chart-3: oklch(0.5 0.13 35);
+    --chart-4: oklch(0.43 0.07 200);
+    --chart-5: oklch(0.5 0.1 85);
+    --radius: 0.5rem;
+    --sidebar: oklch(0.96 0.01 85);
+    --sidebar-foreground: oklch(0.23 0.015 65);
+    --sidebar-primary: oklch(0.45 0.1 55);
+    --sidebar-primary-foreground: oklch(0.99 0.005 85);
+    --sidebar-accent: oklch(0.91 0.02 80);
+    --sidebar-accent-foreground: oklch(0.23 0.015 65);
+    --sidebar-border: oklch(0.3 0.02 65 / 0.18);
+    --sidebar-ring: oklch(0.45 0.1 55 / 0.7);
+  }
+
   .dark {
-    --background: oklch(0.15 0.009 42);
-    --foreground: oklch(0.94 0.013 78);
-    --card: oklch(0.2 0.012 44);
-    --card-foreground: oklch(0.94 0.013 78);
-    --popover: oklch(0.2 0.012 44);
-    --popover-foreground: oklch(0.94 0.013 78);
-    --primary: oklch(0.73 0.09 57);
-    --primary-foreground: oklch(0.15 0.009 42);
-    --secondary: oklch(0.25 0.013 43);
-    --secondary-foreground: oklch(0.94 0.013 78);
-    --muted: oklch(0.25 0.013 43);
-    --muted-foreground: oklch(0.71 0.021 67);
-    --accent: oklch(0.3 0.02 44);
-    --accent-foreground: oklch(0.96 0.012 78);
-    --destructive: oklch(0.62 0.19 25);
+    --background: oklch(0.155 0.006 65);
+    --foreground: oklch(0.95 0.012 85);
+    --card: oklch(0.195 0.007 65);
+    --card-foreground: oklch(0.95 0.012 85);
+    --popover: oklch(0.205 0.008 65);
+    --popover-foreground: oklch(0.95 0.012 85);
+    --primary: oklch(0.8 0.125 72);
+    --primary-foreground: oklch(0.18 0.02 60);
+    --secondary: oklch(0.235 0.008 65);
+    --secondary-foreground: oklch(0.95 0.012 85);
+    --muted: oklch(0.235 0.008 65);
+    --muted-foreground: oklch(0.7 0.016 78);
+    --accent: oklch(0.27 0.01 65);
+    --accent-foreground: oklch(0.96 0.012 85);
+    --destructive: oklch(0.64 0.19 28);
     --destructive-foreground: oklch(0.98 0 0);
-    --border: oklch(0.34 0.019 44);
-    --input: oklch(0.34 0.019 44);
-    --ring: oklch(0.73 0.09 57);
-    --chart-1: oklch(0.73 0.09 57);
-    --chart-2: oklch(0.61 0.08 38);
-    --chart-3: oklch(0.78 0.03 79);
-    --chart-4: oklch(0.55 0.035 170);
-    --chart-5: oklch(0.63 0.055 26);
-    --radius: 0.25rem;
-    --sidebar: oklch(0.17 0.01 42);
-    --sidebar-foreground: oklch(0.94 0.013 78);
-    --sidebar-primary: oklch(0.73 0.09 57);
-    --sidebar-primary-foreground: oklch(0.15 0.009 42);
-    --sidebar-accent: oklch(0.27 0.016 44);
-    --sidebar-accent-foreground: oklch(0.94 0.013 78);
-    --sidebar-border: oklch(0.34 0.019 44);
-    --sidebar-ring: oklch(0.73 0.09 57);
+    --border: oklch(0.95 0.012 85 / 0.11);
+    --input: oklch(0.95 0.012 85 / 0.16);
+    --ring: oklch(0.8 0.125 72 / 0.6);
+    --chart-1: oklch(0.8 0.125 72);
+    --chart-2: oklch(0.7 0.016 78);
+    --chart-3: oklch(0.62 0.09 40);
+    --chart-4: oklch(0.6 0.06 200);
+    --chart-5: oklch(0.88 0.06 85);
+    --radius: 0.5rem;
+    --sidebar: oklch(0.17 0.006 65);
+    --sidebar-foreground: oklch(0.95 0.012 85);
+    --sidebar-primary: oklch(0.8 0.125 72);
+    --sidebar-primary-foreground: oklch(0.18 0.02 60);
+    --sidebar-accent: oklch(0.235 0.008 65);
+    --sidebar-accent-foreground: oklch(0.95 0.012 85);
+    --sidebar-border: oklch(0.95 0.012 85 / 0.11);
+    --sidebar-ring: oklch(0.8 0.125 72 / 0.6);
   }
 }
 
@@ -101,6 +151,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    overflow-wrap: anywhere;
   }
 
   @keyframes drift-a {
@@ -165,6 +216,49 @@
     .animate-drift-b,
     .animate-drift-c {
       animation: none !important;
+    }
+  }
+}
+
+/* ---- FilmCraft guide brand utilities ---------------------------------- */
+
+/* Display type: Archivo set wide, like a film title card. */
+@utility font-title {
+  font-family:
+    var(--font-display),
+    -apple-system,
+    'system-ui',
+    sans-serif;
+  font-stretch: 112%;
+  font-weight: 560;
+  letter-spacing: -0.035em;
+}
+
+/* Timecode / technical labels. */
+@utility font-tc {
+  font-family: var(--font-mono-brand), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* Signature: the hero frame starts letterboxed at 2.39:1 and opens to the
+   full 16:10 frame as the page scrolls (CSS scroll-driven animation; no JS).
+   Browsers without scroll timelines, and reduced-motion users, simply see
+   the full frame. */
+@keyframes letterbox-open {
+  from {
+    clip-path: inset(16.5% 0 16.5% 0 round 10px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 10px);
+  }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .letterbox-open {
+      animation: letterbox-open linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 60vh;
     }
   }
 }

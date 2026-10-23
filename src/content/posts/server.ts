@@ -36,7 +36,7 @@ async function getDbPosts(): Promise<BlogPost[]> {
  * deduped by slug (database wins), newest first.
  */
 export const getBlogPostsFn = createServerFn()
-  .inputValidator((data: { locale: string; limit?: number }) => data)
+  .validator((data: { locale: string; limit?: number }) => data)
   .handler(async ({ data }) => {
     const dbPosts = await getDbPosts();
     return mergePosts(dbPosts, getLocalPosts(data.locale), {
@@ -50,7 +50,7 @@ export const getBlogPostsFn = createServerFn()
  * Content from the bundled glob map (components don't serialize).
  */
 export const getBlogPostFn = createServerFn()
-  .inputValidator((data: { slug: string; locale: string }) => data)
+  .validator((data: { slug: string; locale: string }) => data)
   .handler(async ({ data }): Promise<BlogPostDetail | null> => {
     try {
       const { findPublishedBySlug } = await import('@/modules/posts/service');

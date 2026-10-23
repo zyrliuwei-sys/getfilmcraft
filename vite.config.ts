@@ -144,6 +144,17 @@ export default defineConfig({
     }),
     viteReact(),
     // Cloudflare cron → /api/hotel-lobby/cron (finishes tasks whose tab closed).
-    nitro({ plugins: ['./src/nitro/cron.ts'] }),
+    nitro({
+      plugins: ['./src/nitro/cron.ts'],
+      compressPublicAssets: true,
+      routeRules: {
+        '/assets/**': {
+          headers: { 'cache-control': 'public, max-age=31536000, immutable' },
+        },
+        '/imgs/**': {
+          headers: { 'cache-control': 'public, max-age=86400' },
+        },
+      },
+    }),
   ],
 });

@@ -10,7 +10,7 @@ import { drizzle } from 'drizzle-orm/sqlite-proxy';
  *   - CLOUDFLARE_API_TOKEN if set, otherwise the logged-in wrangler session
  *     (`wrangler auth token`, refreshed automatically).
  *
- * Statements run one by one — no batch atomicity. Fine for development.
+ * Batched statements use one D1 API request, preserving batch atomicity.
  */
 
 let cachedToken: { value: string; expiresAt: number } | null = null;
@@ -40,7 +40,7 @@ async function getToken(forceRefresh = false): Promise<string> {
   return value;
 }
 
-async function rawQuery(sql: string, params: unknown[]) {
+async function rawQueries(queries: { sql: string; params: unknown[] }[]) {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
   const databaseId = process.env.D1_DATABASE_ID;
   if (!accountId || !databaseId) {
@@ -57,7 +57,8 @@ async function rawQuery(sql: string, params: unknown[]) {
         Authorization: `Bearer ${await getToken(forceRefresh)}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ sql, params }),
+      body: JSON.stringify({ batch: queries }),
+      signal: AbortSignal.timeout(30_000),
     });
     if (resp.status === 401 && !forceRefresh) continue;
     const data: any = await resp.json().catch(() => ({}));
@@ -67,7 +68,10 @@ async function rawQuery(sql: string, params: unknown[]) {
         `D1 HTTP ${resp.status}`;
       throw new Error(message);
     }
-    return (data.result?.[0]?.results?.rows ?? []) as unknown[][];
+    return data.result.map(
+      (result: { results?: { rows?: unknown[][] } }) =>
+        result.results?.rows ?? []
+    ) as unknown[][][];
   }
   throw new Error('D1 HTTP authentication failed');
 }
@@ -78,17 +82,15 @@ export function createD1HttpDb() {
   if (instance) return instance;
   instance = drizzle(
     async (sql, params, method) => {
-      const rows = await rawQuery(sql, params);
+      const [rows] = await rawQueries([{ sql, params }]);
       // `get` expects a single row (or undefined), everything else a list.
       return { rows: method === 'get' ? (rows[0] as any) : rows };
     },
     async (queries: { sql: string; params: any[]; method: string }[]) => {
-      const results = [];
-      for (const q of queries) {
-        const rows = await rawQuery(q.sql, q.params);
-        results.push({ rows: q.method === 'get' ? (rows[0] as any) : rows });
-      }
-      return results;
+      const results = await rawQueries(queries);
+      return queries.map((q, index) => ({
+        rows: q.method === 'get' ? (results[index][0] as any) : results[index],
+      }));
     }
   );
   return instance;

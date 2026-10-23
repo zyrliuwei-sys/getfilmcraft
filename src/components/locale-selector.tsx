@@ -30,8 +30,8 @@ export function LocaleSelector({
         className={cn(
           'inline-flex items-center transition-colors outline-none',
           variant === 'icon'
-            ? 'text-muted-foreground hover:bg-accent hover:text-accent-foreground size-8 justify-center rounded-md'
-            : 'h-9 gap-2 rounded-full border px-4 text-sm',
+            ? 'text-muted-foreground hover:bg-accent hover:text-accent-foreground size-10 justify-center rounded-md'
+            : 'h-10 gap-2 rounded-full border px-4 text-sm',
           className
         )}
       >
@@ -53,7 +53,7 @@ export function LocaleSelector({
           <DropdownMenuItem
             key={loc}
             onClick={() => handleSwitch(loc)}
-            className="flex items-center justify-between gap-2"
+            className="flex min-h-10 items-center justify-between gap-2"
           >
             {localeNames[loc] || loc}
             {loc === locale && <Check className="size-3.5" />}

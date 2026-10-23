@@ -161,21 +161,31 @@ export async function saveConfigs(configs: ConfigMap) {
     return;
   }
 
-  await db().transaction(async (tx: any) => {
-    for (const [name, value] of entries) {
-      const [existing] = await tx
-        .select()
-        .from(config)
-        .where(eq(config.name, name))
-        .limit(1);
+  if (envConfigs.database_provider === 'd1') {
+    await db().batch(
+      entries.map(([name, value]) =>
+        db()
+          .insert(config)
+          .values({ name, value })
+          .onConflictDoUpdate({ target: config.name, set: { value } })
+      )
+    );
+  } else
+    await db().transaction(async (tx: any) => {
+      for (const [name, value] of entries) {
+        const [existing] = await tx
+          .select()
+          .from(config)
+          .where(eq(config.name, name))
+          .limit(1);
 
-      if (existing) {
-        await tx.update(config).set({ value }).where(eq(config.name, name));
-      } else {
-        await tx.insert(config).values({ name, value });
+        if (existing) {
+          await tx.update(config).set({ value }).where(eq(config.name, name));
+        } else {
+          await tx.insert(config).values({ name, value });
+        }
       }
-    }
-  });
+    });
 
   // Invalidate cache
   cachedConfigs = null;
@@ -283,23 +293,37 @@ export async function replaceCustomConfigs(
       )
   );
 
-  await db().transaction(async (tx: any) => {
-    for (const name of toDelete) {
-      await tx.delete(config).where(eq(config.name, name));
-    }
-    for (const [name, value] of entries) {
-      const [existing] = await tx
-        .select()
-        .from(config)
-        .where(eq(config.name, name))
-        .limit(1);
-      if (existing) {
-        await tx.update(config).set({ value }).where(eq(config.name, name));
-      } else {
-        await tx.insert(config).values({ name, value });
+  if (envConfigs.database_provider === 'd1') {
+    const writes = [
+      ...toDelete.map((name) =>
+        db().delete(config).where(eq(config.name, name))
+      ),
+      ...entries.map(([name, value]) =>
+        db()
+          .insert(config)
+          .values({ name, value })
+          .onConflictDoUpdate({ target: config.name, set: { value } })
+      ),
+    ];
+    if (writes.length) await db().batch(writes);
+  } else
+    await db().transaction(async (tx: any) => {
+      for (const name of toDelete) {
+        await tx.delete(config).where(eq(config.name, name));
       }
-    }
-  });
+      for (const [name, value] of entries) {
+        const [existing] = await tx
+          .select()
+          .from(config)
+          .where(eq(config.name, name))
+          .limit(1);
+        if (existing) {
+          await tx.update(config).set({ value }).where(eq(config.name, name));
+        } else {
+          await tx.insert(config).values({ name, value });
+        }
+      }
+    });
 
   // Invalidate cache
   cachedConfigs = null;

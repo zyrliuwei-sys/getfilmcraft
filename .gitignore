@@ -40,6 +40,15 @@ wrangler.jsonc
 # misc
 .DS_Store
 *.pem
+*.key
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.dump
+*.sql.gz
 
 # debug
 npm-debug.log*

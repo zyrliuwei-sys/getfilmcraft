@@ -40,7 +40,7 @@ export function SiteFooter({
     <footer className="bg-background text-foreground border-border border-t">
       <div className="mx-auto max-w-7xl px-6 pt-14 pb-6 sm:px-10 sm:pt-16 lg:px-16">
         {tagline && (
-          <p className="mb-12 max-w-2xl font-serif text-4xl leading-[1] tracking-wide sm:text-5xl">
+          <p className="font-title mb-12 max-w-2xl text-3xl leading-[1.08] sm:text-[2.6rem]">
             {tagline}
           </p>
         )}
@@ -73,7 +73,7 @@ export function SiteFooter({
                               : '_blank'
                           }
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                          className="text-muted-foreground hover:text-foreground inline-flex min-h-10 items-center text-sm transition-colors"
                         >
                           {link.label}
                         </a>
@@ -81,7 +81,7 @@ export function SiteFooter({
                         <Link
                           href={link.href}
                           target={link.external ? '_blank' : undefined}
-                          className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                          className="text-muted-foreground hover:text-foreground inline-flex min-h-10 items-center text-sm transition-colors"
                         >
                           {link.label}
                         </Link>

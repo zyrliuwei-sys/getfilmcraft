@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { getAuth } from '@/core/auth';
+import { envConfigs } from '@/config';
 import { getPricingProduct } from '@/config/pricing';
 import { getAllConfigs } from '@/modules/config/service';
 import { recordServerEvent } from '@/modules/events/service';
@@ -25,6 +26,12 @@ function safeSameOriginPath(
 }
 
 async function POST({ request }: { request: Request }) {
+  // Do not accept money until the payment ledger uses D1 atomic batches.
+  if (envConfigs.database_provider === 'd1') {
+    return respErr('Payments are not enabled for this database backend', {
+      status: 503,
+    });
+  }
   const limited = enforceMinIntervalRateLimit(request, {
     intervalMs: 1000,
     keyPrefix: 'checkout',

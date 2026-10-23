@@ -1,6 +1,8 @@
 import handler from '@tanstack/react-start/server-entry';
 
 import { getCookieFromHeader } from './lib/cookie';
+import { isCrossOriginMutation } from './lib/request-security';
+import { respErr } from './lib/resp';
 import { paraglideMiddleware } from './paraglide/server.js';
 
 // On Cloudflare Workers, stash the binding env (D1, ASSETS, …) on globalThis
@@ -71,8 +73,16 @@ async function renderWithEdgeCache(req: Request): Promise<Response> {
 // getLocale() resolves per-request (AsyncLocalStorage) during SSR.
 export default {
   async fetch(req: Request): Promise<Response> {
+    if (isCrossOriginMutation(req)) {
+      return respErr('Forbidden', { status: 403 });
+    }
     await ensureCloudflareEnv();
     const response = await renderWithEdgeCache(req);
+    const path = new URL(req.url).pathname.replace(/^\/zh(?=\/|$)/, '');
+    if (/^\/(api|admin|settings)(\/|$)/.test(path)) {
+      response.headers.set('Cache-Control', 'private, no-store');
+      response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    }
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     response.headers.set(

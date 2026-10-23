@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 
 import { db } from '@/core/db';
+import { envConfigs } from '@/config';
 import { config } from '@/config/db/schema';
 
 const CONFIG_KEY = 'footer_badges';
@@ -18,6 +19,13 @@ export async function getStoredFooterBadges(): Promise<string | undefined> {
 
 /** Store the validated badge list in the shared config table. */
 export async function saveStoredFooterBadges(value: string): Promise<void> {
+  if (envConfigs.database_provider === 'd1') {
+    await db()
+      .insert(config)
+      .values({ name: CONFIG_KEY, value })
+      .onConflictDoUpdate({ target: config.name, set: { value } });
+    return;
+  }
   await db().transaction(async (tx: any) => {
     const [existing] = await tx
       .select({ name: config.name })
