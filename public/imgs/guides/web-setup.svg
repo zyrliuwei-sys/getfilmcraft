@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">FilmCraft Web: from ZIP to browser</title><desc id="desc">Download the official web release, extract all bundled files, serve the folder locally, and open localhost in the browser. Test import, playback and export separately.</desc>
+  <rect width="1200" height="750" fill="#202b2e"/>
+  <g font-family="Arial, sans-serif" fill="#faf6ec">
+    <text x="64" y="73" font-size="16" letter-spacing="3" fill="#d9b78c">THE EDITING DESK / WEB SETUP</text>
+    <text x="64" y="149" font-size="48" font-weight="700">From release ZIP to browser.</text>
+    <text x="64" y="194" font-size="22" fill="#b8c3bf">Keep the package together. Serve it. Check each stage.</text>
+    <g fill="#2d3a3e" stroke="#556465"><rect x="64" y="271" width="244" height="260" rx="10"/><rect x="340" y="271" width="244" height="260" rx="10"/><rect x="616" y="271" width="244" height="260" rx="10"/><rect x="892" y="271" width="244" height="260" rx="10"/></g>
+    <g font-family="monospace" font-size="42" fill="#d9b78c"><text x="90" y="337">01</text><text x="366" y="337">02</text><text x="642" y="337">03</text><text x="918" y="337">04</text></g>
+    <g font-size="28" font-weight="700"><text x="90" y="396">Download</text><text x="366" y="396">Extract</text><text x="642" y="396">Serve</text><text x="918" y="396">Open</text></g>
+    <g font-size="19" fill="#b8c3bf"><text x="90" y="440">Official web ZIP</text><text x="90" y="474">from the release</text><text x="366" y="440">Keep HTML, JS</text><text x="366" y="474">and WASM together</text><text x="642" y="440">Start a local server</text><text x="642" y="474">in the app folder</text><text x="918" y="440">localhost:8765</text><text x="918" y="474">in your browser</text></g>
+    <g fill="none" stroke="#d9b78c" stroke-width="2"><path d="M313 399h20m-6-6l6 6-6 6M589 399h20m-6-6l6 6-6 6M865 399h20m-6-6l6 6-6 6"/></g>
+    <path d="M64 601H1136" stroke="#556465"/><text x="64" y="654" font-size="24">Then test: import → playback → save → short export.</text><text x="64" y="702" font-size="15" fill="#b8c3bf">LOCAL SETUP DIAGRAM · NOT AN APPLICATION SCREENSHOT</text>
+  </g>
+</svg>

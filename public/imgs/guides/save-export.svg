@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">Save the edit. Export the result.</title><desc id="desc">Keep source clips and an editable project together for future editing. Keep a separate rendered video to watch and share. Browser recovery is not your only backup.</desc>
+  <rect width="1200" height="750" fill="#f6f2e9"/>
+  <g font-family="Arial, sans-serif" fill="#302a24">
+    <text x="64" y="73" font-size="16" letter-spacing="3" fill="#835832">THE EDITING DESK / FILES</text>
+    <text x="64" y="149" font-size="48" font-weight="700">Save the edit. Export the result.</text>
+    <text x="64" y="194" font-size="22" fill="#746a5e">Keep the pieces you need to come back tomorrow.</text>
+    <rect x="64" y="251" width="640" height="310" rx="14" fill="#e8e3d8"/>
+    <text x="94" y="296" font-size="16" letter-spacing="2" fill="#746a5e">KEEP TOGETHER</text>
+    <rect x="94" y="325" width="258" height="195" rx="9" fill="#fffdf8"/><rect x="414" y="325" width="260" height="195" rx="9" fill="#fffdf8"/>
+    <g stroke="#697a67" stroke-width="3" fill="none"><path d="M125 359h52v42h-52zM132 370h38M132 390h38"/><path d="M445 356h31l16 16v41h-47zM476 356v17h16M456 389h25M456 400h25"/></g>
+    <text x="125" y="449" font-size="26" font-weight="700">Source media</text><text x="125" y="484" font-size="18" fill="#746a5e">Your original clips</text>
+    <text x="445" y="449" font-size="26" font-weight="700">Project</text><text x="445" y="484" font-size="18" fill="#746a5e">Your editable decisions</text>
+    <text x="370" y="432" font-size="38" fill="#746a5e">+</text>
+    <path d="M726 420h57m-12-10l12 10-12 10" stroke="#835832" stroke-width="3" fill="none"/>
+    <rect x="806" y="251" width="330" height="310" rx="14" fill="#475b60"/>
+    <text x="839" y="296" font-size="16" letter-spacing="2" fill="#e9e8df">WATCH &amp; SHARE</text><path d="M845 348h63v63h-63z" stroke="#e9e8df" stroke-width="3" fill="none"/><path d="M868 364l22 15-22 15z" fill="#e9e8df"/>
+    <text x="839" y="451" font-size="29" font-weight="700" fill="#fffdf8">Video export</text><text x="839" y="487" font-size="19" fill="#e9e8df">The finished picture + sound</text>
+    <path d="M64 616H1136" stroke="#c8bdad"/><text x="64" y="664" font-size="23">Find both saved files before closing the browser tab.</text><text x="64" y="704" font-size="16" fill="#746a5e">Browser recovery is useful. Keep your own copies too.</text>
+  </g>
+</svg>

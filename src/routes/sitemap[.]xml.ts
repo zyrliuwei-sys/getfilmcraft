@@ -2,12 +2,14 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
 import { baseLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
+import { GUIDE_PUBLISHED_AT, GUIDE_SLUGS } from '@/content/guides';
 
 const STATIC_PATHS = [
   '',
   '/download',
   '/online',
   '/tutorial',
+  '/guides',
   '/filmcraft-vs-premiere-pro',
   '/privacy-policy',
   '/terms-of-service',
@@ -78,6 +80,15 @@ export const Route = createFileRoute('/sitemap.xml')({
           changeFrequency: path === '/blog' ? 'daily' : 'weekly',
           priority: path === '' ? 1 : 0.8,
         }));
+
+        entries.push(
+          ...GUIDE_SLUGS.map((slug) => ({
+            path: `/guides/${slug}`,
+            lastModified: GUIDE_PUBLISHED_AT,
+            changeFrequency: 'monthly',
+            priority: 0.7,
+          }))
+        );
 
         // Only published project articles belong in the sitemap. The bundled
         // ShipAny tutorial posts are demo content and carry noindex.

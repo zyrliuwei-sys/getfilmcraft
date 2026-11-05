@@ -1,0 +1,167 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'FilmCraft Web: Local Setup and Browser Troubleshooting',
+  description:
+    'Run the official FilmCraft web build on localhost, check WebGPU and WebGL startup, and diagnose missing files, blank screens and media problems.',
+  category: 'Web setup',
+  minutes: 7,
+  image: '/imgs/guides/web-setup.svg',
+  socialImage: '/imgs/filmcraft/hero.webp',
+  imageAlt:
+    'FilmCraft web setup diagram from release ZIP to a local server and browser editor',
+  toc: [
+    { id: 'download', title: 'Get the official web package' },
+    { id: 'serve', title: 'Serve the extracted folder' },
+    { id: 'verify', title: 'Verify the first launch' },
+    { id: 'troubleshoot', title: 'Troubleshoot in order' },
+    { id: 'hosting', title: 'Move from localhost to hosting' },
+    { id: 'next', title: 'Start an editing session' },
+  ],
+};
+
+FilmCraft Web is the browser build of FilmCraft, packaged as a static web application. The practical setup is to download an official release, extract its files, serve that folder, and open the server address in your browser. Opening `index.html` directly from your file manager is not the same as running a local web server.
+
+This guide focuses on getting the application to load reliably. For editing and file-keeping after launch, use [FilmCraft online: edit, save and export](/guides/filmcraft-online-edit-save-export). The [homepage](/) explains the editor and links to desktop alternatives.
+
+<GuideHeading id="download">1. Get the official web package</GuideHeading>
+
+Visit the [official FilmCraft release page](https://github.com/storytold/filmcraft/releases/latest) and look for the web archive named `filmcraft-web-<version>.zip`. Use the version shown on that release. This naming pattern is documented in the project's [download information](https://github.com/storytold/filmcraft#downloads); asset availability can change between releases.
+
+Extract the archive into its own folder. Keep the JavaScript, WebAssembly, HTML and other bundled files together. Do not combine a new `.wasm` file with JavaScript left over from another version. If the archive contains an extra enclosing directory, locate the folder that actually contains `index.html` before starting the server.
+
+For an easier route to the available files, our [download page](/download) groups release assets by platform. Choose the web build for this exercise, not a desktop installer or source-code archive.
+
+<GuideFigure
+  src="/imgs/guides/web-setup.svg"
+  alt="Setup diagram: download the FilmCraft web ZIP, extract the folder, start a localhost server, then open the editor in a browser"
+>
+  The local setup path. The web server supplies the application files; editing
+  happens in the browser. This is an explanatory diagram, not an application
+  screenshot.
+</GuideFigure>
+
+<GuideHeading id="serve">
+  2. Serve the extracted folder on localhost
+</GuideHeading>
+
+If Python 3 is installed, open a terminal in the folder containing `index.html` and run:
+
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1
+```
+
+On Windows, a Python installation with the `py` launcher can use:
+
+```powershell
+py -m http.server 8765 --bind 127.0.0.1
+```
+
+Leave that terminal running and open [http://localhost:8765](http://localhost:8765) in your browser. Binding to the loopback address keeps this test server on your machine. Stop it with **Ctrl+C** when finished. If port 8765 is already occupied, choose another unused port and change the browser address to match.
+
+This is a basic local trial. FilmCraft's [official web documentation](https://github.com/storytold/filmcraft/blob/main/docs/web.md#build-and-run) also describes building from source and its dedicated development server. A generic Python server does not automatically supply that server's cross-origin isolation headers.
+
+<GuideHeading id="verify">3. Verify the first launch</GuideHeading>
+
+Check the address bar first: it should show `localhost` and the port you started. A directory listing usually means you served the wrong folder or the entry file is missing. A browser connection error usually means the server is not running at that address.
+
+Once the workspace appears, use a small clip to test three operations separately: import, playback and a short export. Write down which stage fails. “The browser version does not work” is too broad to diagnose; “the workspace loads, but this one clip has no picture” gives you a useful next test.
+
+<GuideFigure
+  src="/imgs/filmcraft/hero.webp"
+  alt="FilmCraft workspace reference showing the preview monitor, Project panel and Timeline"
+>
+  Workspace reference: loading the editor UI is the first checkpoint. Import,
+  sound, saving and export still need their own small tests. The pictured
+  project is a desktop demonstration.
+</GuideFigure>
+
+<GuideHeading id="troubleshoot">4. Troubleshoot in a useful order</GuideHeading>
+
+Start with application delivery, then graphics startup, then media. Changing all three at once makes it difficult to learn which change helped.
+
+<GuideTable>
+  <thead>
+    <tr>
+      <th scope="col">What you see</th>
+      <th scope="col">Check next</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Connection refused</td>
+      <td>
+        Confirm the terminal server is still running and the port matches.
+      </td>
+    </tr>
+    <tr>
+      <td>A folder listing</td>
+      <td>
+        Serve the directory that contains <code>index.html</code>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        A missing JavaScript or <code>.wasm</code> request
+      </td>
+      <td>
+        Re-extract the complete archive and check paths in the browser&#x27;s
+        Network panel.
+      </td>
+    </tr>
+    <tr>
+      <td>A WebAssembly MIME-type error</td>
+      <td>
+        Configure the server to serve <code>.wasm</code> as{' '}
+        <code>application/wasm</code>.
+      </td>
+    </tr>
+    <tr>
+      <td>A blank editor after files finish loading</td>
+      <td>
+        Try the documented graphics fallback below, then inspect the browser
+        console.
+      </td>
+    </tr>
+    <tr>
+      <td>Only one clip fails</td>
+      <td>Try another small file before changing the installation.</td>
+    </tr>
+    <tr>
+      <td>Picture plays but audio does not</td>
+      <td>
+        Click in the editor and check tab mute, system output and track
+        controls.
+      </td>
+    </tr>
+  </tbody>
+</GuideTable>
+
+The official build documents `?webgl` to request WebGL2 and `?cpu` for the CPU compositor. Test one at a time:
+
+```text
+http://localhost:8765/?webgl
+http://localhost:8765/?cpu
+```
+
+These are diagnostic options, not promises of faster playback. If you are editing already, save first: changing the URL reloads the app. Avoid experimenting with recovery-reset flags on your only working copy. See the upstream [URL flags and GPU notes](https://github.com/storytold/filmcraft/blob/main/docs/web.md) for their exact meaning.
+
+If a fresh release behaves differently, use a new extracted folder and test it with the same small clip. Keep the previous project copy until the new build has passed your save-and-export trial. For a bug report, include the release, operating system, browser version, failed step and a shareable sample that reproduces it.
+
+<GuideHeading id="hosting">
+  5. Moving from localhost to a hosted site
+</GuideHeading>
+
+For remote hosting, preserve the package's directory structure and configure the server for WebAssembly files. Use HTTPS and verify the actual editor URL, including any subdirectory. A successful homepage response does not prove that its scripts and `.wasm` file are reachable.
+
+FilmCraft's own server example includes cross-origin isolation headers. If your hosting environment needs the same behavior, follow the [upstream deployment notes](https://github.com/storytold/filmcraft/blob/main/docs/web.md#build-and-run) and check the result in a browser. Enabling those headers can also affect which external resources the page may load, so test the whole application after changing them.
+
+Do not make a public host your first debugging step. Prove the package works locally, then change the hosting environment while keeping the test clip and release constant. That gives you a clean comparison when a request path, header or browser permission behaves differently.
+
+<GuideHeading id="next">6. Start an editing session</GuideHeading>
+
+Once import, playback and a short export all work, continue with the [online editing guide](/guides/filmcraft-online-edit-save-export). It explains what to keep before closing the tab. If the web build remains unsuitable for your footage or machine, use the [desktop download guide](/download) and repeat the same small test there.

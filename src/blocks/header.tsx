@@ -6,6 +6,7 @@ export function Header() {
     { href: '/download', label: m['fc.nav.download']() },
     { href: '/online', label: m['fc.nav.online']() },
     { href: '/tutorial', label: m['fc.nav.tutorial']() },
+    { href: '/guides', label: m['fc.guides.nav']() },
     { href: '/filmcraft-vs-premiere-pro', label: m['fc.nav.compare']() },
   ];
 

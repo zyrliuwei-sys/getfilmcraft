@@ -1,0 +1,195 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'FilmCraft Shortcuts: A Practical Keyboard Guide for Editing',
+  description:
+    'Learn FilmCraft playback, trim and tool shortcuts, check the active preset, and troubleshoot keys that behave differently across panels or platforms.',
+  category: 'Keyboard workflow',
+  minutes: 6,
+  image: '/imgs/guides/keyboard-map.svg',
+  socialImage: '/imgs/filmcraft/keyframes.webp',
+  imageAlt: 'FilmCraft keyboard reference highlighting J K L, Q W, V, T and P',
+  toc: [
+    { id: 'preset', title: 'Check your shortcut preset' },
+    { id: 'essentials', title: 'Learn a small useful set' },
+    { id: 'practice', title: 'Practise on one sequence' },
+    { id: 'focus', title: 'Understand panel focus' },
+    { id: 'customize', title: 'Customize and keep a copy' },
+    { id: 'troubleshoot', title: 'Troubleshoot shortcut problems' },
+  ],
+};
+
+The most useful FilmCraft shortcuts are the ones that remove repeated interruptions from your editing. Start with playback, selection and a simple trim. Learn more only when a recurring action is slowing you down. A long list of unpractised keys is less useful than five you can use confidently.
+
+This guide supports the [first-video tutorial](/guides/filmcraft-tutorial-first-video). If you are still learning the interface, use the [beginner walkthrough](/tutorial) alongside it, or return to the [FilmCraft homepage](/) for installation and browser options.
+
+<GuideHeading id="preset">1. Check your shortcut preset first</GuideHeading>
+
+Open **Edit → Keyboard Shortcuts…** and inspect the active set. FilmCraft has its own default layout and a Premiere Pro Compatible preset. They overlap, but they are not identical. The official [keyboard documentation](https://github.com/storytold/filmcraft/blob/main/docs/keyboard.md) gives one concrete example: **Shift+E** is Clip Enable in FilmCraft Default and Export Frame in the compatible preset.
+
+Confirm the command name in your shortcut editor before learning a new combination. On macOS, references may use Command (⌘) and Option (⌥); Windows and Linux combinations should be checked in the app instead of mechanically replacing every symbol. Custom bindings and keyboard layouts can also change what you need to press.
+
+<GuideFigure
+  src="/imgs/guides/keyboard-map.svg"
+  alt="Shortcut learning map: J for reverse, K for stop, L for forward, Q and W for ripple trims, V for selection, T for type and P for pen"
+>
+  A learning map for common editing keys, not a full keyboard or a screenshot.
+  Confirm bindings in your active preset before practising.
+</GuideFigure>
+
+<GuideHeading id="essentials">2. Learn a small, useful set</GuideHeading>
+
+The following starting points come from FilmCraft's [editing overview](https://github.com/storytold/filmcraft#edit), [fade tutorial](https://github.com/storytold/filmcraft/blob/main/docs/getting-started-fades.md) and [graphics documentation](https://github.com/storytold/filmcraft/blob/main/docs/graphics.md). Some actions depend on focus, selection and mode.
+
+<GuideTable>
+  <thead>
+    <tr>
+      <th scope="col">Key</th>
+      <th scope="col">Starting use</th>
+      <th scope="col">Check before pressing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Space</td>
+      <td>Play or stop</td>
+      <td>Finish typing in text or number fields first.</td>
+    </tr>
+    <tr>
+      <td>J / K / L</td>
+      <td>Reverse / stop / forward playback; also used in dynamic trimming</td>
+      <td>Check whether you are in a normal playback or trim workflow.</td>
+    </tr>
+    <tr>
+      <td>V</td>
+      <td>Selection Tool</td>
+      <td>Use it to select and move rather than draw or type.</td>
+    </tr>
+    <tr>
+      <td>T</td>
+      <td>Type Tool in the Program monitor</td>
+      <td>Check that the playhead is over the intended title location.</td>
+    </tr>
+    <tr>
+      <td>P</td>
+      <td>Pen Tool</td>
+      <td>
+        Its action depends on whether you are editing graphics or a timeline
+        parameter.
+      </td>
+    </tr>
+    <tr>
+      <td>Q / W</td>
+      <td>Ripple trim toward the playhead</td>
+      <td>Inspect targeted tracks and the material that will be removed.</td>
+    </tr>
+    <tr>
+      <td>E</td>
+      <td>Extend an edit to the playhead in the trim workflow</td>
+      <td>Select the intended edit point first.</td>
+    </tr>
+    <tr>
+      <td>Comma / period</td>
+      <td>Insert / overwrite from the Source monitor</td>
+      <td>Set the source range and check track patching.</td>
+    </tr>
+  </tbody>
+</GuideTable>
+
+Do not practise ripple operations on your only project copy. Save a duplicate, make the edit and immediately inspect what moved. If the result is surprising, use Undo before making another change; several small edits can hide the original mistake.
+
+<GuideHeading id="practice">
+  3. Practise a five-minute keyboard session
+</GuideHeading>
+
+Choose a short, disposable sequence. The objective is not to edit as fast as possible. It is to make the result predictable enough that you no longer need to think about each key.
+
+1. Click the Timeline and start playback with Space. Stop at a useful moment.
+2. Try J, K and L while watching both direction and speed. Stop before switching tasks.
+3. Choose V and select one clip. Confirm the selection visually.
+4. Perform one trim, replay the join, and undo it. Repeat until the result is easy to anticipate.
+5. Move to a title and use T only when you intend to edit text. Exit text entry before returning to playback keys.
+
+Practise the same tiny sequence twice. On the second pass, notice which mouse movement was unnecessary and which one established important context. A click to focus the correct panel is useful; removing it without understanding focus can make a shortcut less reliable.
+
+<GuideFigure
+  src="/imgs/filmcraft/keyframes.webp"
+  alt="FilmCraft Effect Controls showing animation curves beside the Program monitor and Timeline"
+>
+  Panel context matters. The Timeline, Program monitor and Effect Controls can
+  each interpret an action differently depending on selection and focus.
+</GuideFigure>
+
+<GuideHeading id="focus">
+  4. Understand why panel focus changes a shortcut
+</GuideHeading>
+
+A shortcut is not simply a key attached to the whole application. FilmCraft supports panel-specific bindings. A text field can also consume a keystroke as input. Before diagnosing a broken command, look for the active panel, selected object and any open text entry.
+
+For example, pressing a letter while typing a title should change the title. It should not be interpreted as a timeline tool command. Finish text entry, select the appropriate panel and try the action again. Likewise, moving a graphic layer and moving a timeline clip are different operations even if a preset uses similar modifier keys.
+
+When you learn a command, remember the context with it: “select an edit point, then extend” is a better habit than remembering E alone. The same applies to source insertion: identify the source range and destination tracks before pressing the shortcut.
+
+<GuideHeading id="customize">
+  5. Customize deliberately and keep a copy
+</GuideHeading>
+
+Change one frequently used command at a time. Choose a combination that is comfortable on your actual keyboard, check for conflicts in the shortcut editor and test it in the intended panel. Avoid rebuilding the entire layout before you know which operations you use most.
+
+FilmCraft's shortcut editor can export and import its own JSON presets. The official [keyboard reference](https://github.com/storytold/filmcraft/blob/main/docs/keyboard.md) states that Adobe `.kys` files cannot currently be imported. Selecting a Premiere-compatible layout inside FilmCraft is different from loading an exported Adobe keyboard file.
+
+Export a copy after your custom set feels stable. Give the file a descriptive name and keep a brief note of the changes you made. That makes another computer or a future reinstall easier to set up. After updating the application, recheck the few commands you rely on most before starting a long session.
+
+<GuideHeading id="troubleshoot">6. Troubleshoot shortcut problems</GuideHeading>
+
+<GuideTable>
+  <thead>
+    <tr>
+      <th scope="col">Problem</th>
+      <th scope="col">Useful first check</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>The key types a character instead of editing</td>
+      <td>Exit the text or value field and focus the intended panel.</td>
+    </tr>
+    <tr>
+      <td>A shortcut performs another action</td>
+      <td>
+        Inspect the active preset and search for that key in the shortcut
+        editor.
+      </td>
+    </tr>
+    <tr>
+      <td>A trim changes the wrong material</td>
+      <td>
+        Inspect selection, targeted tracks and the playhead before repeating.
+      </td>
+    </tr>
+    <tr>
+      <td>A web browser consumes the combination</td>
+      <td>
+        Try the command through the app&#x27;s menu; use a different binding or
+        desktop workflow.
+      </td>
+    </tr>
+    <tr>
+      <td>Instructions show Mac symbols on another platform</td>
+      <td>Read the binding displayed by your installation.</td>
+    </tr>
+    <tr>
+      <td>A downloaded preset cannot be imported</td>
+      <td>
+        Confirm it is FilmCraft&#x27;s own preset format, rather than an Adobe{' '}
+        <code>.kys</code> file.
+      </td>
+    </tr>
+  </tbody>
+</GuideTable>
+
+If a command works through its menu but not its key, concentrate on bindings and focus. If neither works, inspect whether the command is available for the current selection. Keep your practice small and return to the [30-second editing exercise](/guides/filmcraft-tutorial-first-video) when you are ready to combine the shortcuts into a finished project.

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">A small set of FilmCraft shortcuts</title><desc id="desc">Start with playback J K L, ripple trims Q W, and tools V T P. Confirm the active keyboard preset and panel focus before using a shortcut.</desc>
+  <rect width="1200" height="750" fill="#f6f2e9"/>
+  <g font-family="Arial, sans-serif" fill="#302a24">
+    <text x="64" y="73" font-size="16" letter-spacing="3" fill="#835832">THE EDITING DESK / KEYBOARD</text>
+    <text x="64" y="149" font-size="48" font-weight="700">Fewer keys. More fluency.</text>
+    <text x="64" y="194" font-size="22" fill="#746a5e">Learn one editing habit at a time.</text>
+    <text x="64" y="281" font-size="18" fill="#746a5e">PLAYBACK</text><text x="64" y="410" font-size="18" fill="#746a5e">RIPPLE TRIM</text><text x="64" y="539" font-size="18" fill="#746a5e">TOOLS</text>
+    <g fill="#475b60"><rect x="244" y="234" width="92" height="86" rx="10"/><rect x="485" y="234" width="92" height="86" rx="10"/><rect x="726" y="234" width="92" height="86" rx="10"/></g>
+    <g fill="#986b46"><rect x="244" y="363" width="92" height="86" rx="10"/><rect x="586" y="363" width="92" height="86" rx="10"/></g>
+    <g fill="#697a67"><rect x="244" y="492" width="92" height="86" rx="10"/><rect x="586" y="492" width="92" height="86" rx="10"/><rect x="866" y="492" width="92" height="86" rx="10"/></g>
+    <g fill="#fffdf8" font-size="42" font-family="monospace" text-anchor="middle"><text x="290" y="291">J</text><text x="531" y="291">K</text><text x="772" y="291">L</text><text x="290" y="420">Q</text><text x="632" y="420">W</text><text x="290" y="549">V</text><text x="632" y="549">T</text><text x="912" y="549">P</text></g>
+    <g font-size="23"><text x="355" y="286">Reverse</text><text x="596" y="286">Stop</text><text x="837" y="286">Forward</text><text x="355" y="415">Toward playhead</text><text x="697" y="415">Toward playhead</text><text x="355" y="544">Selection</text><text x="697" y="544">Type</text><text x="978" y="544">Pen</text></g>
+    <path d="M64 616H1136" stroke="#c8bdad"/><text x="64" y="664" font-size="23">Check your preset. Focus the panel. Inspect the result.</text><text x="64" y="704" font-size="15" fill="#746a5e">LEARNING MAP · BINDINGS MAY VARY BY PRESET AND CONTEXT</text>
+  </g>
+</svg>

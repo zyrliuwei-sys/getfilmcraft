@@ -1450,5 +1450,20 @@
   "fc.dl.arch.universal": "Universal (Apple silicon + Intel)",
   "fc.dl.arch.universal_cli": "Universal",
   "fc.dl.arch.x86": "x86 (32-bit)",
-  "fc.dl.arch.browser": "Any modern browser"
+  "fc.dl.arch.browser": "Any modern browser",
+  "fc.guides.nav": "Guides",
+  "fc.guides.eyebrow": "THE EDITING DESK",
+  "fc.guides.title": "Make your next edit a little easier.",
+  "fc.guides.description": "Practical FilmCraft guides for your first video, browser editing, web setup and a faster keyboard workflow.",
+  "fc.guides.meta.title": "FilmCraft Guides: Tutorials, Online Editing & Shortcuts",
+  "fc.guides.read_time": "{minutes} min read",
+  "fc.guides.read": "Read the guide",
+  "fc.guides.view_all": "All editing guides",
+  "fc.guides.home": "Home",
+  "fc.guides.breadcrumb": "Breadcrumb",
+  "fc.guides.updated": "Updated",
+  "fc.guides.contents": "IN THIS GUIDE",
+  "fc.guides.loading": "Loading guide…",
+  "fc.guides.next": "Keep editing.",
+  "fc.guides.back_home": "Back to the FilmCraft overview"
 }

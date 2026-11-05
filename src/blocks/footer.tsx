@@ -11,6 +11,7 @@ export function Footer() {
         { label: m['fc.nav.download'](), href: '/download' },
         { label: m['fc.nav.online'](), href: '/online' },
         { label: m['fc.nav.tutorial'](), href: '/tutorial' },
+        { label: m['fc.guides.nav'](), href: '/guides' },
         { label: m['fc.nav.compare'](), href: '/filmcraft-vs-premiere-pro' },
       ],
     },

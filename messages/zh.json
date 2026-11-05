@@ -1,0 +1,17 @@
+{
+  "fc.guides.nav": "指南",
+  "fc.guides.eyebrow": "剪辑工作台",
+  "fc.guides.title": "让下一次剪辑更得心应手。",
+  "fc.guides.description": "从第一个视频、浏览器剪辑到 Web 搭建与快捷键，逐步掌握 FilmCraft。",
+  "fc.guides.meta.title": "FilmCraft 指南：入门教程、在线剪辑与快捷键",
+  "fc.guides.read_time": "阅读约 {minutes} 分钟",
+  "fc.guides.read": "阅读指南",
+  "fc.guides.view_all": "全部剪辑指南",
+  "fc.guides.home": "首页",
+  "fc.guides.breadcrumb": "面包屑导航",
+  "fc.guides.updated": "更新于",
+  "fc.guides.contents": "本篇目录",
+  "fc.guides.loading": "正在加载指南…",
+  "fc.guides.next": "继续学习剪辑",
+  "fc.guides.back_home": "返回 FilmCraft 概览"
+}

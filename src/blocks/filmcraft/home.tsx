@@ -20,6 +20,7 @@ import { SectionHeading } from '@/components/filmcraft/section-heading';
 import { buttonVariants } from '@/components/ui/button';
 
 import { compareColumns, compareRows } from './compare-rows';
+import { FeaturedGuides } from './guides';
 
 export const pillPrimary = cn(
   buttonVariants({ size: 'lg' }),
@@ -592,6 +593,7 @@ export function FilmCraftHome({ version }: { version: string }) {
       <Platforms />
       <CompareTeaser />
       <Guides />
+      <FeaturedGuides />
       <Faq />
       <FinalCta />
     </>
