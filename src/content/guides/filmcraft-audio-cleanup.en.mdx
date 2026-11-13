@@ -1,0 +1,85 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'FilmCraft Audio Cleanup: Noise, Gain and Mono-to-Stereo Routing',
+  description:
+    'Identify channel layout, set useful dialogue gain, apply restrained noise reduction, and verify the final stereo output without duplicating microphones.',
+  category: 'Audio editing',
+  minutes: 4,
+  image: '/imgs/filmcraft/hero.webp',
+  imageAlt: 'FilmCraft editing workspace with project media and timeline',
+  publishedAt: '2026-11-13',
+  related: [
+    'filmcraft-multicam-audio-sync',
+    'filmcraft-keyframe-animation',
+    'filmcraft-export-settings',
+  ],
+  toc: [
+    {
+      id: 'channels',
+      title: 'Identify the source channels',
+    },
+    {
+      id: 'gain',
+      title: 'Set gain before mixing',
+    },
+    {
+      id: 'noise',
+      title: 'Reduce noise without damaging speech',
+    },
+    {
+      id: 'output',
+      title: 'Check stereo and the final export',
+    },
+  ],
+};
+
+Clean dialogue begins with understanding the recording. A quiet speaker, a noisy room, and audio heard on only one side are different problems. Raising the master volume does not fix all three, and applying every available effect can make speech less natural. Work on a copy of the sequence and listen to the untreated source first.
+
+FilmCraft v0.20.1 documents built-in audio gain controls, channel operations, mixing, and effects including DeNoise, DeHummer, EQ, and limiting. This guide uses those built-in tools. It does not assume support for an external plugin chain.
+
+<GuideHeading id="channels">1. Identify what is on each channel</GuideHeading>
+
+Listen to the left and right source channels separately. A two-channel camera file might contain a stereo scene, two different microphones, or dialogue on one side and an unused channel on the other. Those require different routing decisions.
+
+For a genuine stereo recording, preserve the intended relationship between channels. For two independent microphones, treat them as separate sources so you can choose and balance them. FilmCraft's **Breakout to Mono** operation works on selected Project-panel media with audio and creates per-channel sources. This gives you a way to inspect and edit each recorded channel deliberately.
+
+If only one channel contains the intended voice, use that mono source and center it in a stereo mix. Duplicating a voice onto two tracks does not create a genuine stereo recording and can change the level or introduce phase problems if the copies are offset. Keep the unused or alternate channel available in the project until you have checked it for useful material.
+
+<GuideHeading id="gain">
+  2. Set useful clip gain, then balance the mix
+</GuideHeading>
+
+Select the dialogue clip and open **Audio Gain**. FilmCraft provides set, adjust, and normalize operations. Use gain to bring the source into a workable range, then use clip or track volume for the balance against music and other speakers.
+
+Listen through both quiet and loud phrases while watching the meters. Peak normalization measures peaks; it does not guarantee that two speakers will sound equally loud. A short loud transient can prevent the rest of a recording from being raised as much as you expected.
+
+Avoid solving an overloaded mix by making one clip extremely quiet and compensating with a large boost elsewhere. Inspect the clip, track, and output stages separately. Preserve headroom at the final output and compare changes at a similar listening level so “louder” is not mistaken for “cleaner.”
+
+<GuideFigure
+  src="/imgs/filmcraft/hero.webp"
+  alt="FilmCraft timeline containing video and audio tracks"
+>
+  Keep the source-channel decision separate from the final track mix. Check the
+  waveform, meters, and actual sound together.
+</GuideFigure>
+
+<GuideHeading id="noise">3. Apply restrained noise reduction</GuideHeading>
+
+Find a passage containing both speech and the problem noise. Apply **DeNoise** to the appropriate clip and increase processing cautiously, comparing the treated and untreated signal. Stop if consonants become watery, the room sound pulses, or the voice loses clarity. Residual steady noise can be less distracting than heavy processing artifacts.
+
+For a stable electrical hum, investigate **DeHummer** rather than assuming general noise reduction is the best first tool. For unwanted low-frequency rumble, a suitable high-pass filter may help, but listen for loss of vocal body. EQ changes tone; it cannot reconstruct speech that was clipped or masked during recording.
+
+Use fades or volume keyframes to smooth edits and transitions into room tone. Do not silence every pause automatically: abrupt changes between speech and absolute silence can make an edit more noticeable. Review the result in the context of music and effects, not only with the dialogue soloed.
+
+<GuideHeading id="output">4. Verify the stereo export</GuideHeading>
+
+Check the final mix on headphones and speakers, then listen in mono if your playback setup allows it. A voice that disappears or changes drastically when summed may indicate a routing or phase problem. For multicamera edits, confirm that angle switches do not unintentionally switch microphones; see the [multicam guide](/guides/filmcraft-multicam-audio-sync).
+
+Export a sample with the intended audio channel layout. Open it outside FilmCraft and confirm both channels, dialogue continuity, and the absence of clipping. Keep the unprocessed source files and a saved project so you can revise the treatment later.
+
+Sources: [FilmCraft v0.20.1 audio overview](https://github.com/storytold/filmcraft/blob/v0.20.1/README.md#audio) and [Breakout to Mono source behavior](https://github.com/storytold/filmcraft/blob/v0.20.1/crates/engine/src/clip_ops/audio_options.rs).

@@ -5,6 +5,7 @@ import {
   filmcraftLinks,
   filmcraftWebAppUrl,
   releaseLinks,
+  type FilmcraftRelease,
 } from '@/config/filmcraft';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
@@ -12,6 +13,7 @@ import { Reveal } from '@/components/filmcraft/reveal';
 
 import { pillGhost, pillPrimary } from './home';
 import { CodeBlock, PageIntro, StepList } from './page-shell';
+import { ReleaseDetails } from './release-details';
 
 function withFlag(url: string, flag: string) {
   return url + (url.includes('?') ? '&' : '?') + flag;
@@ -83,7 +85,8 @@ function PendingEditor({ webBuild }: { webBuild: string }) {
   );
 }
 
-export function OnlineGuide({ version }: { version: string }) {
+export function OnlineGuide({ release }: { release: FilmcraftRelease }) {
+  const { version } = release;
   const webBuild = releaseLinks(version).webBuild;
   const url = filmcraftWebAppUrl;
   const reqs = [
@@ -104,7 +107,9 @@ export function OnlineGuide({ version }: { version: string }) {
         label={m['fc.online.label']()}
         title={m['fc.online.title']()}
         description={m['fc.online.subtitle']()}
-      />
+      >
+        <ReleaseDetails release={release} />
+      </PageIntro>
       <section className="px-4 pb-16">
         <div className="mx-auto max-w-6xl space-y-6">
           {url ? (

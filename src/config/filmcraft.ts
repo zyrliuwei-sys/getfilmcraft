@@ -1,3 +1,5 @@
+import releaseSnapshot from './filmcraft-release-snapshot.json';
+
 /**
  * FilmCraft facts used across the guide pages (version, download links,
  * official resources). Sourced from https://getartcraft.com/apps/filmcraft
@@ -7,18 +9,19 @@
  * request time (modules/filmcraft-release); FILMCRAFT_VERSION is only the
  * fallback used when GitHub can't be reached.
  */
-export const FILMCRAFT_VERSION = '0.12.0';
+export const FILMCRAFT_VERSION = releaseSnapshot.version;
 
-/** The latest release as the pages see it. `assets` = published file names,
- *  or null when unknown (fallback), in which case every file is listed. */
+/** Verified release metadata, either from GitHub or a last-known snapshot. */
 export interface FilmcraftRelease {
   version: string;
-  assets: string[] | null;
+  assets: string[];
+  publishedAt: string;
+  source: 'github' | 'cached' | 'snapshot';
 }
 
 export const fallbackRelease: FilmcraftRelease = {
-  version: FILMCRAFT_VERSION,
-  assets: null,
+  ...releaseSnapshot,
+  source: 'snapshot',
 };
 
 const releaseDownload = (version: string, name: string) =>
@@ -51,7 +54,7 @@ export const filmcraftLinks = {
  * (e.g. an R2 bucket on app.getfilmcraft.org). Empty = no hosted editor yet.
  */
 export const filmcraftWebAppUrl: string =
-  import.meta.env.VITE_FILMCRAFT_WEB_URL ?? '';
+  import.meta.env?.VITE_FILMCRAFT_WEB_URL ?? '';
 
 export type PlatformId = 'macos' | 'windows' | 'linux' | 'other';
 
@@ -149,10 +152,10 @@ export function buildDownloads(
     ],
   };
 
-  const published = release.assets ? new Set(release.assets) : null;
+  const published = new Set(release.assets);
   const keep = (files: (DownloadFile & { name: string })[]) =>
     files
-      .filter((x) => !published || published.has(x.name))
+      .filter((x) => published.has(x.name))
       .map(({ name: _name, ...rest }) => rest);
   return {
     macos: keep(all.macos),

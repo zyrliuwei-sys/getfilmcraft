@@ -1,0 +1,91 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'FilmCraft Offline Media: How to Find and Relink Missing Files',
+  description:
+    'Repair broken media paths without rebuilding the edit: locate originals, verify identity, relink related files, and check the recovered timeline.',
+  category: 'Media recovery',
+  minutes: 3,
+  image: '/imgs/filmcraft/hero.webp',
+  imageAlt: 'FilmCraft editing workspace with project media and timeline',
+  publishedAt: '2026-11-13',
+  related: [
+    'filmcraft-proxy-workflow',
+    'filmcraft-export-settings',
+    'filmcraft-tutorial-first-video',
+  ],
+  toc: [
+    {
+      id: 'diagnose',
+      title: 'Identify the offline state',
+    },
+    {
+      id: 'locate',
+      title: 'Locate and verify a file',
+    },
+    {
+      id: 'batch',
+      title: 'Relink the rest safely',
+    },
+    {
+      id: 'review',
+      title: 'Review and save the repaired project',
+    },
+  ],
+};
+
+An offline slate usually means FilmCraft cannot read the media at the path saved in the project. It does not automatically mean the edit has disappeared. The timeline still contains decisions such as cuts and placement; repairing the media reference can restore the picture without rebuilding those decisions.
+
+Before changing anything, save a separate copy of the project and reconnect any external drives or network locations used during editing. Do not delete the offline clips from the timeline. This guide follows the desktop Link Media workflow documented for FilmCraft v0.20.1.
+
+<GuideHeading id="diagnose">
+  1. Distinguish missing, offline, and unreadable media
+</GuideHeading>
+
+FilmCraft checks media when a project opens and can display the Link Media dialog automatically. A missing path may result from a renamed folder, a different drive mount, or a project copied without its footage. A clip deliberately set offline is a separate condition. An unreadable file can exist at the correct location but fail to decode.
+
+Inspect the item in the Project panel. The documented unreadable badge can explain a decoder problem; repeatedly locating the same file will not install a missing decoder. Also distinguish a missing proxy from a missing original. If the original remains available, follow the [proxy guide](/guides/filmcraft-proxy-workflow) to correct its proxy association rather than replacing the original with a low-resolution copy.
+
+<GuideHeading id="locate">
+  2. Locate one original and verify the match
+</GuideHeading>
+
+1. Open **File → Link Media…** if the dialog is not already visible.
+2. Select an affected item and read its saved filename and path.
+3. Use Locate to select the original, or browse to a likely folder and search for candidates.
+4. Preview the candidate and compare the take, duration, frame size, frame rate, and audio channels.
+5. Keep the relevant matching checks enabled, then link the verified file.
+
+FilmCraft records file identity information for supported project versions and uses it during relinking. Matching names alone are weak evidence: cameras can reuse filenames on different cards. A rejected match deserves investigation, particularly when the clip duration or content is different. Older projects may lack the identity information, making your visual check more important.
+
+Do not use Replace Footage or force a match simply to remove the warning. Replacing footage bypasses normal identity checks and can deliberately substitute a different source. That is a different editing task from recovering a moved original.
+
+<GuideFigure
+  src="/imgs/filmcraft/hero.webp"
+  alt="FilmCraft media panel and timeline with linked clips"
+>
+  Restore the source association, then review the existing edit. Deleting
+  timeline clips is not part of routine relinking.
+</GuideFigure>
+
+<GuideHeading id="batch">
+  3. Relink related files and handle timecode deliberately
+</GuideHeading>
+
+When the whole shoot folder moved, **Relink others automatically** can infer the folder change from the file you just linked. FilmCraft checks the additional candidates rather than relying only on the folder name. Review any files left unresolved, especially when footage came from multiple drives or cards with overlapping names.
+
+**Align Timecode** serves a specific purpose: preserving source-timecode relationships when the replacement file starts at a different timecode. It is useful in workflows such as an EDL whose media is linked afterward. Leave it unchanged for an ordinary folder move unless you understand why the timecode differs; it is not a universal repair checkbox.
+
+<GuideHeading id="review">
+  4. Verify the recovered sequence before saving over anything
+</GuideHeading>
+
+Scrub representative shots near the beginning, middle, and end of the edit. Check trim boundaries, recognizable actions, dialogue sync, and any clip-specific graphics or effects. A plausible thumbnail does not prove that the entire sequence references the correct take.
+
+Save the repaired project under a clear revision name, close it, and reopen it while the intended storage is connected. If it immediately becomes offline again, check whether you linked to temporary or removable locations. Keep the original project copy until you have reviewed an [exported sample](/guides/filmcraft-export-settings) and confirmed that the restored media is the correct source.
+
+Source: [FilmCraft v0.20.1 media and relinking documentation](https://github.com/storytold/filmcraft/blob/v0.20.1/docs/project-files.md#media-offline-relinking-proxies-ingest).

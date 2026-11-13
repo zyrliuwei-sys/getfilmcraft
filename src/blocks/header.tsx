@@ -8,6 +8,8 @@ export function Header() {
     { href: '/tutorial', label: m['fc.nav.tutorial']() },
     { href: '/guides', label: m['fc.guides.nav']() },
     { href: '/filmcraft-vs-premiere-pro', label: m['fc.nav.compare']() },
+    { href: '/about', label: m['fc.nav.about']() },
+    { href: '/contact', label: m['fc.nav.contact']() },
   ];
 
   return (
@@ -15,11 +17,9 @@ export function Header() {
       navLinks={navLinks}
       logoAlt={m['fc.logo_alt']()}
       cta={{ href: '/download', label: m['fc.nav.cta']() }}
-      // The guide has no public accounts; signing in is for the site admin,
-      // so land on the admin panel (non-admins are refused by its APIs).
-      signIn={{
-        href: '/sign-in?callbackUrl=/admin',
-        label: m['common.nav.sign_in'](),
+      menuLabels={{
+        open: m['fc.nav.menu_open'](),
+        close: m['fc.nav.menu_close'](),
       }}
     />
   );

@@ -12,6 +12,7 @@ let cached: { value: FilmcraftRelease; expiresAt: number } | null = null;
 
 interface GithubRelease {
   tag_name?: string;
+  published_at?: string;
   draft?: boolean;
   prerelease?: boolean;
   assets?: { name?: string }[];
@@ -36,7 +37,15 @@ async function fetchLatestRelease(): Promise<FilmcraftRelease> {
   const assets = (data.assets ?? [])
     .map((a) => a.name)
     .filter((name): name is string => typeof name === 'string');
-  return { version, assets: assets.length ? assets : null };
+  const publishedAt = data.published_at;
+  if (
+    !publishedAt ||
+    !Number.isFinite(Date.parse(publishedAt)) ||
+    !assets.length
+  ) {
+    throw new Error('Latest release is missing its publication date or assets');
+  }
+  return { version, publishedAt, assets, source: 'github' };
 }
 
 /**
@@ -54,7 +63,12 @@ export async function getLatestFilmcraftRelease(): Promise<FilmcraftRelease> {
   } catch (error) {
     console.warn('[filmcraft-release] using fallback version:', error);
     // Keep the last good answer if there is one.
-    const value = cached?.value ?? fallbackRelease;
+    const value: FilmcraftRelease = cached
+      ? {
+          ...cached.value,
+          source: cached.value.source === 'snapshot' ? 'snapshot' : 'cached',
+        }
+      : fallbackRelease;
     cached = { value, expiresAt: now + RETRY_MS };
     return value;
   }

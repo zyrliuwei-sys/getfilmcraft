@@ -27,7 +27,7 @@ export function GuideHeading({
 export function GuideTable({ children }: { children: ReactNode }) {
   return (
     <div className="border-border my-7 overflow-x-auto rounded-lg border">
-      <table className="[&_th]:bg-card [&_th]:text-foreground [&_tr]:border-border w-full border-collapse text-left text-sm leading-relaxed [&_tbody_tr:last-child]:border-0 [&_td]:px-4 [&_td]:py-3 [&_td]:align-top [&_th]:px-4 [&_th]:py-3 [&_th]:font-semibold [&_tr]:border-b">
+      <table className="[&_th]:bg-card [&_th]:text-foreground [&_tr]:border-border w-full min-w-[540px] border-collapse text-left text-sm leading-relaxed [overflow-wrap:normal] [&_tbody_tr:last-child]:border-0 [&_td]:px-4 [&_td]:py-3 [&_td]:align-top [&_th]:px-4 [&_th]:py-3 [&_th]:font-semibold [&_tr]:border-b">
         {children}
       </table>
     </div>

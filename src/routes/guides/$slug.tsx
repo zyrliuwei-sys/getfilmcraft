@@ -6,7 +6,7 @@ import { m } from '@/paraglide/messages.js';
 import { getLocale, localizeUrl } from '@/paraglide/runtime.js';
 import { FilmcraftGuide } from '@/blocks/filmcraft/guides';
 import { PageShell } from '@/blocks/filmcraft/page-shell';
-import { getGuide, GUIDE_PUBLISHED_AT } from '@/content/guides';
+import { getGuide } from '@/content/guides';
 
 export const Route = createFileRoute('/guides/$slug')({
   loader: ({ params }) => {
@@ -35,8 +35,8 @@ export const Route = createFileRoute('/guides/$slug')({
             : item
         )
         .concat([
-          { property: 'article:published_time', content: GUIDE_PUBLISHED_AT },
-          { property: 'article:modified_time', content: GUIDE_PUBLISHED_AT },
+          { property: 'article:published_time', content: guide.publishedAt },
+          { property: 'article:modified_time', content: guide.updatedAt },
         ]),
       scripts: [
         {
@@ -52,8 +52,8 @@ export const Route = createFileRoute('/guides/$slug')({
                 mainEntityOfPage: url,
                 image: `${envConfigs.app_url}${guide.socialImage ?? guide.image}`,
                 inLanguage: locale,
-                datePublished: GUIDE_PUBLISHED_AT,
-                dateModified: GUIDE_PUBLISHED_AT,
+                datePublished: guide.publishedAt,
+                dateModified: guide.updatedAt,
                 author: {
                   '@type': 'Organization',
                   name: envConfigs.app_name,

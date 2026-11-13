@@ -1,0 +1,89 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'FilmCraft Color Management: Read Waveforms and Vectorscopes',
+  description:
+    'Set a consistent color workflow, inspect source interpretation, and use scopes to balance exposure and color before checking your export.',
+  category: 'Color and scopes',
+  minutes: 4,
+  image: '/imgs/filmcraft/color.webp',
+  imageAlt: 'FilmCraft color controls and preview',
+  publishedAt: '2026-11-13',
+  related: [
+    'filmcraft-export-settings',
+    'filmcraft-keyframe-animation',
+    'filmcraft-vs-davinci-resolve',
+  ],
+  toc: [
+    {
+      id: 'pipeline',
+      title: 'Set the color pipeline',
+    },
+    {
+      id: 'waveform',
+      title: 'Read the waveform',
+    },
+    {
+      id: 'vector',
+      title: 'Read the vectorscope',
+    },
+    {
+      id: 'match',
+      title: 'Match shots and verify output',
+    },
+  ],
+};
+
+Color correction is easier when you separate source interpretation, sequence processing, and creative adjustments. If footage is interpreted incorrectly, moving contrast and saturation sliders may disguise the problem in one shot while making the next shot worse. Begin with a known delivery goal, then use scopes alongside the picture.
+
+FilmCraft v0.20.1 documents a color-managed pipeline and live waveform and vectorscope displays calculated from the graded frame. These tools provide evidence about the image signal; they do not replace viewing the result on an appropriate display or checking the exported file.
+
+<GuideHeading id="pipeline">
+  1. Establish a consistent color pipeline
+</GuideHeading>
+
+For an ordinary SDR delivery, start with a consistent SDR working setup appropriate to the destination. Open **Sequence → Sequence Settings… → Color Management** to inspect the Working Color Space and the **Auto Tone Map Media (HDR and log into SDR)** option. A wide-gamut checkbox is not a general “better quality” switch; changing the pipeline changes how colors are processed.
+
+Inspect unusual-looking source footage before grading it. **Clip → Modify → Interpret Footage…** includes color-management controls. Use a source-color override only when you know how the camera or recording application encoded the file. A flat log image and an incorrectly interpreted image are not interchangeable diagnoses.
+
+When mixing log, HDR, and ordinary SDR clips, document the intended interpretation and conversion. Avoid stacking an input conversion LUT on top of an automatic conversion without checking whether both are doing the same job. Save a project revision before changing the pipeline across an existing grade.
+
+<GuideHeading id="waveform">
+  2. Read the waveform as an exposure map
+</GuideHeading>
+
+Open the Color workspace and display the scopes. The waveform spreads the image horizontally while plotting signal level vertically. It helps you locate bright and dark areas and see whether a correction compresses or clips their range. The exact scale and interpretation depend on the working and viewing setup, so first read the scope labels rather than memorizing a universal target.
+
+Choose a frame with meaningful highlights and shadows. Adjust exposure or tonal controls while watching both the waveform and the Program monitor. A flat concentration at a boundary can suggest clipping, but a deliberately solid graphic or dark background may also produce a simple pattern. Inspect actual subject detail before deciding that every flat area needs correction.
+
+Do not force every shot to fill the entire scope. A night scene, a foggy landscape, and a bright studio interview should not automatically have the same tonal distribution. Preserve the intended lighting while correcting distracting discontinuities between adjacent shots.
+
+<GuideFigure
+  src="/imgs/filmcraft/color.webp"
+  alt="FilmCraft Color workspace with video scopes and a preview"
+>
+  Read the scopes beside the image. The scene's lighting and content explain
+  what the signal distribution means.
+</GuideFigure>
+
+<GuideHeading id="vector">
+  3. Use the vectorscope to inspect color and saturation
+</GuideHeading>
+
+The vectorscope plots chroma direction and strength. Movement farther from the center generally indicates stronger saturation; direction indicates the color family. Compare a known neutral surface and the subject's appearance while adjusting white balance. A scene filled with a colored wall can pull the overall trace without proving that the shot has a color cast.
+
+Make restrained changes and toggle the correction to compare before and after. Watch for bright clothing or signage becoming distracting while trying to improve a face. A skin-tone reference can help investigation, but it is not a requirement to push every complexion and lighting condition onto one identical line.
+
+<GuideHeading id="match">
+  4. Match neighboring shots and check delivery
+</GuideHeading>
+
+Pick a reference shot, then compare adjacent shots at similar moments. Balance exposure and white balance before adding a creative look. Revisit the scopes after saturation, curves, or LUT changes because those adjustments can alter the signal you previously balanced.
+
+Export a sample through the intended delivery settings and view it outside the editor. If it differs substantially, check output interpretation, player behavior, and the display setup before regrading the entire sequence. Record the settings used for the accepted version so a later revision follows the same pipeline.
+
+Sources: [FilmCraft v0.20.1 color overview](https://github.com/storytold/filmcraft/blob/v0.20.1/README.md#color), [color interpretation dialogs](https://github.com/storytold/filmcraft/blob/v0.20.1/crates/ui-egui/src/panels/color_dialogs.rs), and [sequence color settings](https://github.com/storytold/filmcraft/blob/v0.20.1/crates/ui-egui/src/panels/sequence_settings.rs). Continue with the [export checklist](/guides/filmcraft-export-settings).

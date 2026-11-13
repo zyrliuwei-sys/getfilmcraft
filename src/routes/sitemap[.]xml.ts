@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
 import { baseLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
-import { GUIDE_PUBLISHED_AT, GUIDE_SLUGS } from '@/content/guides';
+import { getGuides } from '@/content/guides';
 
 const STATIC_PATHS = [
   '',
@@ -10,6 +10,8 @@ const STATIC_PATHS = [
   '/online',
   '/tutorial',
   '/guides',
+  '/about',
+  '/contact',
   '/filmcraft-vs-premiere-pro',
   '/privacy-policy',
   '/terms-of-service',
@@ -82,9 +84,9 @@ export const Route = createFileRoute('/sitemap.xml')({
         }));
 
         entries.push(
-          ...GUIDE_SLUGS.map((slug) => ({
-            path: `/guides/${slug}`,
-            lastModified: GUIDE_PUBLISHED_AT,
+          ...getGuides().map((guide) => ({
+            path: `/guides/${guide.slug}`,
+            lastModified: guide.updatedAt,
             changeFrequency: 'monthly',
             priority: 0.7,
           }))

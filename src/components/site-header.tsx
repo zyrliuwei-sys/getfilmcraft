@@ -1,20 +1,12 @@
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 import { ArrowRight, Menu, X } from 'lucide-react';
 
-import { useSession } from '@/core/auth/client';
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
 import { cn } from '@/lib/utils';
-import { m } from '@/paraglide/messages.js';
 import { LocaleSelector } from '@/components/locale-selector';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { buttonVariants } from '@/components/ui/button';
-
-const SiteUserMenu = lazy(() =>
-  import('@/components/site-user-menu').then((module) => ({
-    default: module.SiteUserMenu,
-  }))
-);
 
 export interface NavLink {
   href: string;
@@ -30,18 +22,14 @@ export function SiteHeader({
   navLinks,
   logoAlt,
   cta,
-  signIn,
+  menuLabels,
 }: {
   navLinks?: NavLink[];
   logoAlt: string;
-  /** Signed-out call to action; defaults to "Get started" → /settings. */
-  cta?: { href: string; label: string };
-  /** Optional signed-out "Sign in" link shown next to the call to action. */
-  signIn?: { href: string; label: string };
+  cta: { href: string; label: string };
+  menuLabels: { open: string; close: string };
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { data: session } = useSession();
-  const user = session?.user;
 
   return (
     <header className="bg-background/70 border-border sticky top-0 z-50 w-full border-b backdrop-blur-xl">
@@ -61,7 +49,7 @@ export function SiteHeader({
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-5 xl:flex">
           {navLinks?.map((link) =>
             isExternalHref(link.href) ? (
               <a
@@ -87,48 +75,23 @@ export function SiteHeader({
         </nav>
 
         {/* Desktop actions */}
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           <LocaleSelector />
           <ThemeToggle />
-          {user ? (
-            <Suspense
-              fallback={<span className="bg-muted size-10 rounded-full" />}
-            >
-              <SiteUserMenu
-                name={user.name || 'User'}
-                email={user.email}
-                image={user.image}
-              />
-            </Suspense>
-          ) : (
-            <>
-              {signIn && (
-                <Link
-                  href={signIn.href}
-                  className={cn(
-                    buttonVariants({ variant: 'ghost' }),
-                    'rounded-full px-4'
-                  )}
-                >
-                  {signIn.label}
-                </Link>
-              )}
-              <Link
-                href={cta?.href ?? '/settings'}
-                className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
-              >
-                {cta?.label ?? m['common.nav.get_started']()}
-                <ArrowRight className="size-4" />
-              </Link>
-            </>
-          )}
+          <Link
+            href={cta.href}
+            className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
+          >
+            {cta.label}
+            <ArrowRight className="size-4" />
+          </Link>
         </div>
 
         {/* Mobile toggle */}
         <button
-          className="focus-visible:ring-ring inline-flex size-11 items-center justify-center rounded-md focus-visible:ring-2 lg:hidden"
+          className="focus-visible:ring-ring inline-flex size-11 items-center justify-center rounded-md focus-visible:ring-2 xl:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-label={mobileOpen ? menuLabels.close : menuLabels.open}
           aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -137,7 +100,7 @@ export function SiteHeader({
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-border border-t px-4 pt-2 pb-4 lg:hidden">
+        <div className="border-border border-t px-4 pt-2 pb-4 xl:hidden">
           <nav className="flex flex-col gap-2">
             {navLinks?.map((link) =>
               isExternalHref(link.href) ? (
@@ -168,39 +131,13 @@ export function SiteHeader({
             <LocaleSelector />
             <ThemeToggle />
             <div className="flex-1" />
-            {user ? (
-              <Suspense
-                fallback={<span className="bg-muted size-10 rounded-full" />}
-              >
-                <SiteUserMenu
-                  name={user.name || 'User'}
-                  email={user.email}
-                  image={user.image}
-                />
-              </Suspense>
-            ) : (
-              <>
-                {signIn && (
-                  <Link
-                    href={signIn.href}
-                    className={cn(
-                      buttonVariants({ variant: 'ghost' }),
-                      'rounded-full px-4'
-                    )}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {signIn.label}
-                  </Link>
-                )}
-                <Link
-                  href={cta?.href ?? '/settings'}
-                  className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {cta?.label ?? m['common.nav.get_started']()}
-                </Link>
-              </>
-            )}
+            <Link
+              href={cta.href}
+              className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
+              onClick={() => setMobileOpen(false)}
+            >
+              {cta.label}
+            </Link>
           </div>
         </div>
       )}

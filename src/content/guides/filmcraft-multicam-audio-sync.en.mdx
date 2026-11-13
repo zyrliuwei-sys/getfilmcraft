@@ -1,0 +1,117 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'FilmCraft Multicam Editing: Synchronize Cameras Using Audio',
+  description:
+    'Prepare camera scratch tracks, create a multicamera source, verify waveform alignment, and cut angles while keeping the intended audio continuous.',
+  category: 'Multicamera editing',
+  minutes: 3,
+  image: '/imgs/filmcraft/hero.webp',
+  imageAlt: 'FilmCraft editing workspace with project media and timeline',
+  publishedAt: '2026-11-13',
+  related: [
+    'filmcraft-audio-cleanup',
+    'filmcraft-proxy-workflow',
+    'filmcraft-export-settings',
+  ],
+  toc: [
+    {
+      id: 'prepare',
+      title: 'Prepare a sync reference',
+    },
+    {
+      id: 'sync',
+      title: 'Create and synchronize the source',
+    },
+    {
+      id: 'verify',
+      title: 'Check alignment and drift',
+    },
+    {
+      id: 'cut',
+      title: 'Cut angles and keep audio consistent',
+    },
+  ],
+};
+
+Multicamera editing has two separate jobs: align recordings of the same event, then choose which camera the viewer sees. Audio synchronization helps with the first job when each camera recorded a useful scratch track. It does not remove the need to inspect the result, and it cannot match recordings that contain no usable common sound.
+
+FilmCraft v0.20.1 provides a Create Multi-Camera Source Sequence dialog with In Points, Out Points, Timecode, Clip Marker, and Audio synchronization choices. Use a duplicate project while learning the workflow, particularly when a long recording or external sound recorder is involved.
+
+<GuideHeading id="prepare">
+  1. Prepare media with a common reference
+</GuideHeading>
+
+Import the camera clips and identify which recordings overlap. Give the sources recognizable names before combining them. Listen to the scratch audio on each camera: a clap, a spoken phrase, or another distinct transient makes an excellent manual check after automatic alignment.
+
+If one camera has no usable sound, mark a shared visual event or use reliable production timecode instead. Repeated music, silence, distant echoes, and unrelated recordings can make an audio match ambiguous. Do not interpret a completed operation as proof that the correct event was found.
+
+Decide which audio should remain in the final edit. Camera scratch tracks can be useful for synchronization while being unsuitable for the finished mix. Keep a note of the intended dialogue source so switching video angles does not accidentally switch the listener between different microphones.
+
+<GuideHeading id="sync">2. Create the multicamera source</GuideHeading>
+
+Select the relevant media in the Project panel and invoke **Create Multi-Camera Source Sequence…**. Give the source a useful name and choose **Audio** as the Synchronize Point when all selected clips share usable sound. Review the audio behavior before confirming.
+
+<GuideTable>
+  <thead>
+    <tr>
+      <th>Audio choice</th>
+      <th>Editing consequence to consider</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Camera 1</td>
+      <td>
+        Uses the first camera's audio as the reference output; verify that it is
+        the source you want to hear.
+      </td>
+    </tr>
+    <tr>
+      <td>All Cameras</td>
+      <td>
+        Keeps camera audio available together; listen for doubled sound and
+        decide which sources belong in the mix.
+      </td>
+    </tr>
+    <tr>
+      <td>Switch Audio</td>
+      <td>
+        Audio follows angle switching; useful only when those microphone changes
+        are intentional.
+      </td>
+    </tr>
+  </tbody>
+</GuideTable>
+
+Place the resulting multicamera source into your editing sequence. Keep the original source items organized in the Project panel; deleting or relocating their media does not simplify the underlying dependency.
+
+<GuideHeading id="verify">
+  3. Check the alignment at more than one point
+</GuideHeading>
+
+Listen around a distinct transient and compare the camera images with the sound. A visible hand clap or consonant can reveal a mismatch that is hard to notice in a wide shot. Then check a later shared event. If the beginning aligns but the end does not, you may be dealing with recording drift or a time-base problem rather than one fixed offset.
+
+For a failed automatic match, return to a copy and use a clearly marked common event with the appropriate marker or In Point synchronization method. Correct source issues before committing to a long angle edit. A proxy should also match the source's time base; see the [proxy workflow](/guides/filmcraft-proxy-workflow) if playback becomes difficult.
+
+<GuideFigure
+  src="/imgs/filmcraft/hero.webp"
+  alt="FilmCraft editing timeline and monitors"
+>
+  Use the timeline and recognizable events to verify synchronization before
+  cutting camera angles. This image shows the general editing workspace.
+</GuideFigure>
+
+<GuideHeading id="cut">
+  4. Switch pictures while monitoring the sound
+</GuideHeading>
+
+Enable **View → Multi-Camera View**. FilmCraft's documented monitor behavior distinguishes switching an angle from recording a cut: clicking an angle while playing with **Multi-Camera Record** enabled creates angle cuts. With recording disabled, a click selects an angle without the same recording behavior. Verify the active mode before beginning a pass.
+
+After the pass, play across every cut and listen on headphones. If dialogue changes tone or doubles, review the multicamera audio choice and active sources. Refine cut points on the timeline, then export a sample containing several angle changes. The [audio cleanup guide](/guides/filmcraft-audio-cleanup) covers gain, noise, and channel checks for the chosen sound source.
+
+Source: [FilmCraft v0.20.1 multicamera dialog and monitor behavior](https://github.com/storytold/filmcraft/blob/v0.20.1/crates/ui-egui/src/panels/multicam.rs).

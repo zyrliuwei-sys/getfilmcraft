@@ -17,6 +17,7 @@ import { Reveal } from '@/components/filmcraft/reveal';
 
 import { pillGhost, pillPrimary } from './home';
 import { CodeBlock, PageIntro, StepList } from './page-shell';
+import { ReleaseDetails } from './release-details';
 
 const linuxCmds = (v: string) => `chmod +x filmcraft-${v}-linux-x86_64.AppImage
 ./filmcraft-${v}-linux-x86_64.AppImage
@@ -141,7 +142,9 @@ export function DownloadGuide({ release }: { release: FilmcraftRelease }) {
         label={`${m['fc.dl.label']()} · ${m['fc.common.version']()} v${release.version}`}
         title={m['fc.dl.title']()}
         description={m['fc.dl.subtitle']()}
-      />
+      >
+        <ReleaseDetails release={release} />
+      </PageIntro>
 
       <section className="px-4 pb-16">
         <div className="mx-auto max-w-6xl space-y-6">

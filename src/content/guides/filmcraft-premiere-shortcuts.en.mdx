@@ -1,0 +1,123 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'FilmCraft Shortcuts for Premiere Pro Users: A Migration Checklist',
+  description:
+    'Choose the compatible preset, compare familiar commands, check panel focus, and rebuild a portable shortcut set without importing a Premiere .kys file.',
+  category: 'Premiere migration',
+  minutes: 3,
+  image: '/imgs/filmcraft/keyframes.webp',
+  imageAlt: 'FilmCraft effect controls and timeline',
+  publishedAt: '2026-11-13',
+  related: [
+    'filmcraft-shortcuts',
+    'filmcraft-keyframe-animation',
+    'filmcraft-export-settings',
+  ],
+  toc: [
+    {
+      id: 'preset',
+      title: 'Choose and back up a preset',
+    },
+    {
+      id: 'map',
+      title: 'Compare the keys',
+    },
+    {
+      id: 'practice',
+      title: 'Run a migration exercise',
+    },
+    {
+      id: 'fix',
+      title: 'Resolve conflicts',
+    },
+  ],
+};
+
+Moving from Premiere Pro is easier when you migrate commands deliberately. A familiar key can perform a different action in another preset, and a correct binding can still behave differently when the wrong panel has focus. This guide is a migration checklist; the [general shortcuts guide](/guides/filmcraft-shortcuts) covers a smaller beginner set.
+
+The references below follow the official FilmCraft v0.20.1 keyboard documentation. Its Premiere-compatible reference uses macOS notation. Read Command as Command and Option as Option; check the actual Windows or Linux binding inside FilmCraft instead of assuming every modifier can be substituted.
+
+<GuideHeading id="preset">1. Choose and back up a preset</GuideHeading>
+
+Open **Edit → Keyboard Shortcuts…**. If you already changed bindings, export your current set before switching. Select **Premiere Pro Compatible** and inspect the command names for the actions you use every day. FilmCraft also has a **FilmCraft Default** preset; the names matter because these sets are not identical.
+
+FilmCraft imports and exports its own JSON shortcut files. A Premiere `.kys` file cannot currently be imported. Keep your old Premiere configuration as a reference, then recreate only the bindings you need. Export the new FilmCraft set after checking it so a reinstall does not erase your work.
+
+<GuideHeading id="map">2. Compare commands, not just key labels</GuideHeading>
+
+<GuideTable>
+  <thead>
+    <tr>
+      <th>Editing intention</th>
+      <th>Compatible preset reference</th>
+      <th>What to check in FilmCraft</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Move to the next or previous edit</td>
+      <td>Down / Up</td>
+      <td>These follow targeted tracks. Shift+Down / Up searches any track.</td>
+    </tr>
+    <tr>
+      <td>Select the clip at the playhead</td>
+      <td>D</td>
+      <td>Focus the Timeline and check the playhead position first.</td>
+    </tr>
+    <tr>
+      <td>Extend the previous or next edit to the playhead</td>
+      <td>Shift+Q / Shift+W</td>
+      <td>Check the edit and track targets on a disposable sequence.</td>
+    </tr>
+    <tr>
+      <td>Set the work area boundaries</td>
+      <td>Option+[ / Option+]</td>
+      <td>
+        This is a Timeline command; the work area is distinct from source In and
+        Out points.
+      </td>
+    </tr>
+    <tr>
+      <td>Export a still frame</td>
+      <td>Shift+E</td>
+      <td>FilmCraft Default assigns this key to Clip Enable instead.</td>
+    </tr>
+    <tr>
+      <td>Find an item in the Project panel</td>
+      <td>Shift+F</td>
+      <td>Panel focus determines which find box receives input.</td>
+    </tr>
+  </tbody>
+</GuideTable>
+
+A shortcut table is a starting reference, not proof that your customized installation has those bindings. Search for the command in the shortcut editor when a key does something unexpected. Do not repeatedly press a destructive trim key while trying to discover what it controls.
+
+<GuideFigure
+  src="/imgs/filmcraft/keyframes.webp"
+  alt="FilmCraft workspace showing effect controls beside the timeline"
+>
+  Selection and panel focus are part of the shortcut workflow. Confirm the
+  active panel before testing a familiar key.
+</GuideFigure>
+
+<GuideHeading id="practice">3. Run a small migration exercise</GuideHeading>
+
+1. Save a separate practice project and place several clips on a sequence.
+2. Click the Timeline, target the intended tracks, and move between edits with Up and Down. Compare the result with the any-track variants.
+3. Put the playhead inside a clip and use Select Clip at Playhead. Confirm the highlight before changing anything.
+4. Test one extend-edit command, play across the result, and undo it. Check that linked audio remains aligned.
+5. Focus the Program monitor and test Export Frame. If the clip becomes disabled, return to the preset selector rather than assuming the export failed.
+6. Export your verified custom shortcut JSON and store it with your editing setup notes.
+
+<GuideHeading id="fix">
+  4. Resolve conflicts before building muscle memory
+</GuideHeading>
+
+Finish typing in text and number fields before using application shortcuts. If the key still fails, try the command through its menu: a disabled menu command usually points to selection or context, while a working menu command points toward the binding or keyboard layout. Check both application-wide and panel-specific assignments before replacing a shortcut.
+
+Source: [FilmCraft v0.20.1 keyboard reference](https://github.com/storytold/filmcraft/blob/v0.20.1/docs/keyboard.md). Continue with [keyframe animation](/guides/filmcraft-keyframe-animation), or return to the [guide index](/guides) to choose a different workflow.

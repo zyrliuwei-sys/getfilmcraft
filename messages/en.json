@@ -1454,8 +1454,8 @@
   "fc.guides.nav": "Guides",
   "fc.guides.eyebrow": "THE EDITING DESK",
   "fc.guides.title": "Make your next edit a little easier.",
-  "fc.guides.description": "Practical FilmCraft guides for your first video, browser editing, web setup and a faster keyboard workflow.",
-  "fc.guides.meta.title": "FilmCraft Guides: Tutorials, Online Editing & Shortcuts",
+  "fc.guides.description": "Practical FilmCraft workflows for editing, media management, color, sound, captions, export and moving from other editors.",
+  "fc.guides.meta.title": "FilmCraft Guides: Editing, Export, Audio and Troubleshooting",
   "fc.guides.read_time": "{minutes} min read",
   "fc.guides.read": "Read the guide",
   "fc.guides.view_all": "All editing guides",
@@ -1465,5 +1465,12 @@
   "fc.guides.contents": "IN THIS GUIDE",
   "fc.guides.loading": "Loading guide…",
   "fc.guides.next": "Keep editing.",
-  "fc.guides.back_home": "Back to the FilmCraft overview"
+  "fc.guides.back_home": "Back to the FilmCraft overview",
+  "fc.nav.about": "About",
+  "fc.nav.contact": "Contact",
+  "fc.nav.menu_open": "Open menu",
+  "fc.nav.menu_close": "Close menu",
+  "fc.release.published": "Released {date} (UTC)",
+  "fc.release.snapshot": "Last verified release; check GitHub for updates.",
+  "fc.release.notes": "Release notes"
 }

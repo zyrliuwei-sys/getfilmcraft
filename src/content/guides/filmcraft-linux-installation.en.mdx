@@ -1,0 +1,100 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'Install FilmCraft on Linux: Packages, Launch Errors and Media Checks',
+  description:
+    'Choose the right Linux architecture and official package, install locally, and distinguish launch, graphics, and media problems before troubleshooting.',
+  category: 'Linux installation',
+  minutes: 4,
+  image: '/imgs/filmcraft/hero.webp',
+  imageAlt: 'FilmCraft editing workspace with project media and timeline',
+  publishedAt: '2026-11-13',
+  related: [
+    'filmcraft-proxy-workflow',
+    'filmcraft-relink-offline-media',
+    'filmcraft-export-settings',
+  ],
+  toc: [
+    {
+      id: 'package',
+      title: 'Choose the official package',
+    },
+    {
+      id: 'install',
+      title: 'Install and launch',
+    },
+    {
+      id: 'diagnose',
+      title: 'Diagnose launch and media problems',
+    },
+    {
+      id: 'report',
+      title: 'Verify the workflow and report an issue',
+    },
+  ],
+};
+
+FilmCraft offers several Linux package formats, so begin with your architecture and distribution rather than downloading the first filename you see. The [download page](/download) reads the current GitHub release and lists published assets. This guide explains the installation process using the v0.20.1 documentation; package availability can change in later releases.
+
+Keep an existing project backup before changing application versions. An installer updating successfully does not by itself confirm that your camera files, graphics driver, and export path work together on this machine.
+
+<GuideHeading id="package">
+  1. Match the architecture and package format
+</GuideHeading>
+
+Run `uname -m` in a terminal. An `x86_64` result calls for the x86_64 Linux package; `aarch64` identifies the ARM64 target. Do not choose a Windows or macOS file merely because it has a similar processor label.
+
+The official release provides formats such as AppImage, Flatpak, Debian packages, RPM packages, and tar archives for supported targets. Use a package compatible with your distribution and the asset list for that release. A `.deb` file is not an interchangeable substitute for an `.rpm` file.
+
+Download from the official GitHub release linked on this site's download page. If checking integrity, compare your downloaded file's SHA-256 digest with the matching entry in that same release's checksum file. A checksum from a different version or architecture is not a useful comparison.
+
+<GuideHeading id="install">2. Install one selected package</GuideHeading>
+
+For an AppImage, open a terminal in the download folder, substitute the exact filename you downloaded, make it executable, and run it:
+
+```sh
+chmod +x ./filmcraft-VERSION-linux-ARCH.AppImage
+./filmcraft-VERSION-linux-ARCH.AppImage
+```
+
+`VERSION` and `ARCH` are placeholders, not literal parts to paste unchanged. Use the actual published filename. Running from the terminal also keeps an error message visible if the window fails to appear.
+
+For a local Flatpak bundle, the official instructions use:
+
+```sh
+flatpak install --user ./filmcraft-VERSION-linux-ARCH.flatpak
+```
+
+Read the package manager's prompts and launch the installed application from your desktop menu. For a Debian-family package, use your distribution's package installer for the downloaded `.deb`; for an RPM-based distribution, use its supported package-management workflow. Let the package manager report missing dependencies rather than manually copying libraries between distributions.
+
+The official tar archive includes `install.sh`. Extract the archive, review the included instructions, and run `./install.sh` from the extracted folder for the documented per-user installation in `~/.local`. Administrator privileges are not required for that per-user path.
+
+<GuideHeading id="diagnose">
+  3. Separate launch failures from media failures
+</GuideHeading>
+
+If the application does not open, capture the terminal error and check architecture, executable permission, and package requirements first. If an AppImage reports a missing runtime dependency, follow your distribution's guidance or try another official format for your architecture. Do not run the editor as root as a general troubleshooting step.
+
+For graphics initialization problems, record the GPU and driver information alongside the error. Update drivers through the distribution's supported process; do not assume that a workaround documented for a Windows graphics backend applies to Linux.
+
+If the editor opens but footage is missing, check the media path and permissions. A sandboxed installation may have different access to external folders. Test a file in an accessible user folder before diagnosing a decoder issue. If the item exists but is marked unreadable, inspect the reported format or decoder error instead of repeatedly relinking it.
+
+<GuideFigure
+  src="/imgs/filmcraft/hero.webp"
+  alt="FilmCraft editing workspace with imported media"
+>
+  After installation, verify a complete import, edit, save, and export cycle
+  with your own media.
+</GuideFigure>
+
+<GuideHeading id="report">4. Verify a small real workflow</GuideHeading>
+
+Import a representative video and audio file, make a short sequence, save the project, and reopen it. Export a sample and play that file outside the editor. If editing heavy footage is the issue, try the [proxy workflow](/guides/filmcraft-proxy-workflow); if paths are broken, use the [media relinking guide](/guides/filmcraft-relink-offline-media).
+
+For an upstream issue, include the FilmCraft version, Linux distribution, architecture, package format, GPU, exact error, and steps that reproduce it. Remove private paths and unrelated personal data from logs. A reproducible description is more useful than reporting only that Linux “does not work.”
+
+Source: [FilmCraft v0.20.1 Linux installation documentation](https://github.com/storytold/filmcraft/blob/v0.20.1/README.md#linux). See [Contact](/contact) for corrections to this guide; software defects belong with the upstream project.

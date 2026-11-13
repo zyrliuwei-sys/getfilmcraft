@@ -11,7 +11,7 @@ import { SectionHeading } from '@/components/filmcraft/section-heading';
 import {
   getGuideBody,
   getGuides,
-  GUIDE_PUBLISHED_AT,
+  getRelatedGuides,
   type Guide,
 } from '@/content/guides';
 
@@ -21,6 +21,7 @@ export function FeaturedGuides({
   standalone?: boolean;
 }) {
   const CardHeading = standalone ? 'h2' : 'h3';
+  const guides = standalone ? getGuides() : getGuides().slice(0, 4);
   return (
     <section id="editing-guides" className="px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-6xl">
@@ -42,7 +43,7 @@ export function FeaturedGuides({
           )}
         </div>
         <div className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2">
-          {getGuides().map((guide, index) => (
+          {guides.map((guide, index) => (
             <Link
               key={guide.slug}
               href={`/guides/${guide.slug}`}
@@ -118,7 +119,7 @@ export function FilmcraftGuide({ guide }: { guide: Guide }) {
           </p>
           <p className="text-muted-foreground mt-6 text-sm">
             {envConfigs.app_name} · {m['fc.guides.updated']()}{' '}
-            <time dateTime={GUIDE_PUBLISHED_AT}>{GUIDE_PUBLISHED_AT}</time>
+            <time dateTime={guide.updatedAt}>{guide.updatedAt}</time>
           </p>
         </header>
         <div className="mt-10 grid items-start gap-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
@@ -156,19 +157,17 @@ export function FilmcraftGuide({ guide }: { guide: Guide }) {
             <aside className="border-border mt-14 border-t pt-8">
               <h2 className="font-title text-2xl">{m['fc.guides.next']()}</h2>
               <ul className="divide-border mt-5 divide-y">
-                {getGuides()
-                  .filter((item) => item.slug !== guide.slug)
-                  .map((item) => (
-                    <li key={item.slug}>
-                      <Link
-                        href={`/guides/${item.slug}`}
-                        className="hover:text-primary flex items-center justify-between gap-4 py-4"
-                      >
-                        {item.title}
-                        <ArrowUpRight className="size-4 shrink-0" />
-                      </Link>
-                    </li>
-                  ))}
+                {getRelatedGuides(guide).map((item) => (
+                  <li key={item.slug}>
+                    <Link
+                      href={`/guides/${item.slug}`}
+                      className="hover:text-primary flex items-center justify-between gap-4 py-4"
+                    >
+                      {item.title}
+                      <ArrowUpRight className="size-4 shrink-0" />
+                    </Link>
+                  </li>
+                ))}
               </ul>
               <Link
                 href="/"

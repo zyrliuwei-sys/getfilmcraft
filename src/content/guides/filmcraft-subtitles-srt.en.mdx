@@ -1,0 +1,115 @@
+import {
+  GuideFigure,
+  GuideHeading,
+  GuideTable,
+} from '../../components/filmcraft/guide-content';
+
+export const meta = {
+  title: 'FilmCraft Subtitles: Import SRT, Export Captions and Burn In Text',
+  description:
+    'Import and correct an SRT caption track, export a separate subtitle file, and choose deliberately between selectable captions and text burned into the picture.',
+  category: 'Subtitles and captions',
+  minutes: 3,
+  image: '/imgs/filmcraft/export.webp',
+  imageAlt: 'FilmCraft export workspace with a video preview',
+  publishedAt: '2026-11-13',
+  related: [
+    'filmcraft-vertical-video',
+    'filmcraft-export-settings',
+    'filmcraft-tutorial-first-video',
+  ],
+  toc: [
+    {
+      id: 'delivery',
+      title: 'Choose the caption delivery',
+    },
+    {
+      id: 'import',
+      title: 'Import and correct SRT',
+    },
+    {
+      id: 'export',
+      title: 'Export the subtitle file',
+    },
+    {
+      id: 'burn',
+      title: 'Make and verify a burned-in version',
+    },
+  ],
+};
+
+A video with visible text and a video with selectable subtitles are different deliverables. Before editing captions in FilmCraft, find out whether the destination expects a separate SRT file, permanently visible captions, or a supported embedded subtitle stream. Choosing this early prevents duplicated subtitles and unnecessary re-exports.
+
+This guide follows the v0.20.1 caption documentation. It describes an existing subtitle file and manual caption corrections; it does not assume that importing a video automatically produces a transcript.
+
+<GuideHeading id="delivery">1. Separate the three delivery types</GuideHeading>
+
+<GuideTable>
+  <thead>
+    <tr>
+      <th>Delivery</th>
+      <th>What the viewer receives</th>
+      <th>What to verify</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SRT sidecar</td>
+      <td>
+        A text file containing cue timing and text, delivered alongside the
+        video
+      </td>
+      <td>
+        The player or upload platform must load and associate the subtitle file.
+      </td>
+    </tr>
+    <tr>
+      <td>Burned-in captions</td>
+      <td>Text rendered into the video pixels</td>
+      <td>
+        The viewer cannot turn it off; position, spelling, and size must be
+        correct before export.
+      </td>
+    </tr>
+    <tr>
+      <td>Embedded selectable subtitles</td>
+      <td>A subtitle stream inside a supported media container</td>
+      <td>
+        Container, exporter, player, and subtitle-format support must all agree.
+      </td>
+    </tr>
+  </tbody>
+</GuideTable>
+
+Importing SRT does not by itself promise an embedded selectable stream in the exported MP4. The documented FilmCraft workflow provides separate caption export and a video burn-in control. If a client specifically requests embedded subtitles, confirm the supported container workflow rather than relabeling a sidecar file as embedded.
+
+<GuideHeading id="import">
+  2. Import SRT into the intended sequence
+</GuideHeading>
+
+Open the sequence that matches the subtitle timing, then choose **File → Import** and select the `.srt` file. Dropping a recognized caption file is another documented import path. FilmCraft creates a caption track and snaps cue timing to sequence frames.
+
+Open **Text → Captions** in the Text panel to inspect the imported segments. Check the first spoken line and a later line against the audio. A constant offset suggests a different start point; increasing drift suggests that the file was timed against a different edit or time base. Do not fix every cue manually until you know which problem you have.
+
+Correct text and In/Out times, then play through the transitions between captions. Look for cues covering the wrong speaker, text that disappears mid-sentence, and collisions with titles. Use the track style controls for the on-screen appearance, but remember that an SRT sidecar does not preserve the complete appearance of a styled caption track in every player.
+
+<GuideHeading id="export">
+  3. Export and test a separate subtitle file
+</GuideHeading>
+
+Choose **File → Export → Captions…**, or **Export captions…** in the Text panel. Select **SRT** as the format and choose the correct caption track if the sequence contains multiple languages or versions. Give the file a name that clearly matches the corresponding video revision.
+
+Open the exported SRT in a text editor to confirm the expected language, text, and timecodes. Then load it alongside the exported video in a player that supports sidecar captions. Check several points rather than only the opening cue. If you later trim the sequence, export a new matching subtitle file; an earlier SRT does not automatically follow changes made after its export.
+
+<GuideFigure src="/imgs/filmcraft/export.webp" alt="FilmCraft export workspace">
+  Video export and caption-file export are separate delivery steps. Review the
+  caption setting for the version you are creating.
+</GuideFigure>
+
+<GuideHeading id="burn">4. Make a burned-in version deliberately</GuideHeading>
+
+Enable the intended caption track's output eye, review it in the Program monitor, and use **Burn Captions Into Video** in Export mode for a permanently captioned version. For a clean video plus SRT, disable burn-in and verify the result. Also inspect nested sequences: the documentation notes that captions inside a nest become part of that nest's picture, which the outer burn-in switch does not remove.
+
+Check a sample at the actual delivery dimensions, especially for [vertical video](/guides/filmcraft-vertical-video). Confirm text does not sit under interface overlays or outside the frame. Play the final video without loading the SRT to verify whether text is truly burned in, then test the sidecar separately if both versions are being delivered.
+
+Source: [FilmCraft v0.20.1 captions documentation](https://github.com/storytold/filmcraft/blob/v0.20.1/docs/captions.md). Continue with the [export settings checklist](/guides/filmcraft-export-settings).

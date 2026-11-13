@@ -28,7 +28,7 @@ function OnlinePage() {
   const { release } = Route.useLoaderData();
   return (
     <PageShell>
-      <OnlineGuide version={release.version} />
+      <OnlineGuide release={release} />
     </PageShell>
   );
 }

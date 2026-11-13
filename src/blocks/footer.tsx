@@ -30,6 +30,8 @@ export function Footer() {
     {
       title: m['fc.footer.legal'](),
       links: [
+        { label: m['fc.nav.about'](), href: '/about' },
+        { label: m['fc.nav.contact'](), href: '/contact' },
         { label: m['landing.footer.privacy'](), href: '/privacy-policy' },
         { label: m['landing.footer.terms'](), href: '/terms-of-service' },
         { label: m['landing.footer.aup'](), href: '/acceptable-use-policy' },
