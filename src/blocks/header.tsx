@@ -16,6 +16,7 @@ export function Header() {
     <SiteHeader
       navLinks={navLinks}
       logoAlt={m['fc.logo_alt']()}
+      signIn={{ href: '/admin', label: m['common.sign.sign_in_title']() }}
       cta={{ href: '/download', label: m['fc.nav.cta']() }}
       menuLabels={{
         open: m['fc.nav.menu_open'](),

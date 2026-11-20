@@ -22,11 +22,13 @@ export function SiteHeader({
   navLinks,
   logoAlt,
   cta,
+  signIn,
   menuLabels,
 }: {
   navLinks?: NavLink[];
   logoAlt: string;
   cta: { href: string; label: string };
+  signIn?: { href: string; label: string };
   menuLabels: { open: string; close: string };
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -78,6 +80,17 @@ export function SiteHeader({
         <div className="hidden items-center gap-3 xl:flex">
           <LocaleSelector />
           <ThemeToggle />
+          {signIn && (
+            <Link
+              href={signIn.href}
+              className={cn(
+                buttonVariants({ variant: 'ghost' }),
+                'rounded-full px-4'
+              )}
+            >
+              {signIn.label}
+            </Link>
+          )}
           <Link
             href={cta.href}
             className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
@@ -131,6 +144,18 @@ export function SiteHeader({
             <LocaleSelector />
             <ThemeToggle />
             <div className="flex-1" />
+            {signIn && (
+              <Link
+                href={signIn.href}
+                className={cn(
+                  buttonVariants({ variant: 'ghost' }),
+                  'min-h-11 rounded-full px-4'
+                )}
+                onClick={() => setMobileOpen(false)}
+              >
+                {signIn.label}
+              </Link>
+            )}
             <Link
               href={cta.href}
               className={cn(buttonVariants(), 'gap-1.5 rounded-full px-4')}
